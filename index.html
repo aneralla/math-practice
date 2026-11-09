@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4338ca">
+<title>6 Accel Math: Practice Tests</title>
+<style>
+  :root { --ink:#1f2937; --muted:#6b7280; --bg:#f5f5fb; --card:#fff; --brand:#4338ca; --brand2:#6366f1;
+          --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2; --line:#e5e7eb; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width:560px; margin:0 auto; padding:16px 14px calc(28px + env(safe-area-inset-bottom)); }
+  header.top { background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; padding:22px 16px 18px;
+    border-radius:0 0 22px 22px; padding-top:calc(22px + env(safe-area-inset-top)); }
+  header.top h1 { margin:0 0 4px; font-size:24px; }
+  header.top p { margin:0; opacity:.9; font-size:15px; }
+  .card { background:var(--card); border-radius:16px; padding:16px; margin:12px 0; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+  .test { display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; cursor:pointer; color:inherit; font:inherit; }
+  .test .num { flex:0 0 38px; height:38px; border-radius:12px; background:#eef2ff; color:var(--brand); font-weight:700;
+    display:flex; align-items:center; justify-content:center; }
+  .test .meta { flex:1; min-width:0; }
+  .test .title { font-weight:650; }
+  .test .sub { color:var(--muted); font-size:14px; }
+  .badge { font-size:13px; font-weight:700; padding:3px 8px; border-radius:999px; background:#f3f4f6; color:var(--muted); white-space:nowrap; }
+  .badge.good { background:var(--okbg); color:var(--ok); }
+  .badge.mid { background:#fef9c3; color:#854d0e; }
+  .star { background:#fff7ed; border:2px solid #fdba74; }
+  .bar { height:8px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin:6px 0 2px; }
+  .bar > i { display:block; height:100%; background:var(--brand2); transition:width .3s; }
+  .qhead { display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--muted); }
+  .back { border:0; background:none; color:var(--brand); font:inherit; font-size:15px; padding:6px 0; cursor:pointer; }
+  .q { font-size:19px; font-weight:560; margin:6px 0 12px; }
+  .choice { display:block; width:100%; text-align:left; font:inherit; color:inherit; background:#fff; border:2px solid var(--line);
+    border-radius:14px; padding:13px 14px; margin:9px 0; cursor:pointer; min-height:52px; }
+  .choice:active { transform:scale(.99); }
+  .choice.correct { border-color:var(--ok); background:var(--okbg); }
+  .choice.wrong { border-color:var(--bad); background:var(--badbg); }
+  .choice[disabled] { cursor:default; }
+  .numrow { display:flex; gap:8px; }
+  .numrow input { flex:1; font:inherit; font-size:20px; padding:12px; border:2px solid var(--line); border-radius:12px; min-width:0; }
+  .numrow input:focus { outline:none; border-color:var(--brand2); }
+  .keys { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .key { font:inherit; border:1px solid var(--line); background:#f9fafb; border-radius:10px; padding:8px 14px; cursor:pointer; }
+  .btn { display:block; width:100%; font:inherit; font-weight:650; border:0; border-radius:14px; padding:14px; margin-top:12px;
+    background:var(--brand); color:#fff; cursor:pointer; }
+  .btn.ghost { background:#eef2ff; color:var(--brand); }
+  .fb { border-radius:14px; padding:12px 14px; margin-top:12px; }
+  .fb.ok { background:var(--okbg); }
+  .fb.bad { background:var(--badbg); }
+  .fb .fbh { display:block; margin-bottom:4px; font-weight:700; }
+  .hint { color:var(--muted); font-size:14px; margin-top:6px; }
+  .fr { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.85em; margin:0 2px; line-height:1.1; }
+  .fr > span:first-child { border-bottom:1.5px solid currentColor; padding:0 2px; }
+  .fr > span:last-child { padding:0 2px; }
+  svg.graph { display:block; width:100%; max-width:340px; margin:4px auto 10px; background:#fff; }
+  table.t { border-collapse:collapse; margin:6px auto 12px; font-size:16px; }
+  table.t caption { font-weight:650; font-size:14px; color:var(--muted); padding-bottom:4px; }
+  table.t td, table.t th { border:1.5px solid #9ca3af; padding:6px 10px; text-align:center; }
+  table.t th { background:#eef2ff; }
+  .tables { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .score { font-size:44px; font-weight:800; text-align:center; margin:6px 0 0; }
+  .center { text-align:center; }
+  .rev { border-top:1px solid var(--line); padding:10px 0; font-size:15px; }
+  .rev:first-child { border-top:0; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/*DATA-START*/
+// ---------- helpers used by the question bank ----------
+function gcd(a,b){a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b];}return a||1;}
+function N(v){return v<0?'−'+Math.abs(v):String(v);}            // number with a real minus sign
+function P(p){return '('+N(p[0])+', '+N(p[1])+')';}               // point
+function frac(n,d){ if(d===0) return 'undefined'; if(d<0){n=-n;d=-d;} const g=gcd(n,d); n/=g; d/=g;
+  return d===1? String(n) : n+'/'+d; }
+function fracShow(s){ if(s==='undefined') return 'undefined'; if(!s.includes('/')) return N(+s);
+  const [n,d]=s.split('/').map(Number); return (n<0?'−':'')+'{'+Math.abs(n)+'/'+d+'}'; }
+function paren(v){return v<0?'('+N(v)+')':N(v);}
+// Slope from two points: answer and worked steps are computed, never typed by hand.
+function slopeQ(a,b,extra){
+  const dy=b[1]-a[1], dx=b[0]-a[0], ans=frac(dy,dx);
+  let ex='m = {{'+N(b[1])+' − '+paren(a[1])+'||'+N(b[0])+' − '+paren(a[0])+'}} = {{'+N(dy)+'||'+N(dx)+'}}';
+  if(dx===0) ex+='. You can’t divide by 0, so the slope is <b>undefined</b> (a vertical line).';
+  else if(dy===0) ex+=' = 0. The slope is 0 (a horizontal line).';
+  else ex+=' = <b>'+fracShow(ans)+'</b>';
+  return Object.assign({type:'num', q:'Find the slope of the line through '+P(a)+' and '+P(b)+'.', a:ans, ex:ex, slopePts:[a,b]}, extra||{});
+}
+
+// ---------- the question bank: one test per deck ----------
+// mc: c[0] is the correct choice (choices are shuffled on screen).
+// Checker-only fields: on, form, pointOn, intercepts, slopeOf, yint, xint, calc.
+const TESTS = [
+{ id:'graph-day2', title:'Graphing Linear Equations', date:'Oct 6', deck:'graph linear equations day 2', qs:[
+  {q:'Your friend draws a vertical line crossing the x-axis at 4 and labels it y = 4. Is your friend correct?',
+   g:{lines:[[[4,-6],[4,6]]]},
+   c:['No. A vertical line through 4 is x = 4. The graph of y = 4 is a horizontal line.','Yes. y = 4 is a vertical line.','Yes. x = 4 and y = 4 are the same line.','No. It should be labeled y = −4.'],
+   ex:'Vertical lines are “x = number.” Horizontal lines are “y = number.” So y = 4 is the flat line through (0, 4).'},
+  {q:'Which ordered pair is a solution of y = x − 5?', pointOn:'y = x − 5',
+   c:['(3, −2)','(−2, 3)','(5, 5)','(0, 5)'], ex:'Plug in x = 3: y = 3 − 5 = −2 ✓.'},
+  {q:'Which ordered pair is a solution of y = −7?', pointOn:'y = −7',
+   c:['(4, −7)','(−7, 4)','(0, 7)','(−7, 0)'], ex:'Every point on y = −7 has a y-value of −7, whatever x is.'},
+  {q:'Which point is on the line 7x − y = 14?', pointOn:'7x − y = 14',
+   c:['(2, 0)','(0, 2)','(1, 7)','(2, 14)'], ex:'7(2) − 0 = 14 ✓. Check the others: 7(1) − 7 = 0, not 14.'},
+  {q:'Solve 5x + 2y = 4 for y.', on:[[0,2],[2,-3]],
+   c:['y = −{5/2}x + 2','y = {5/2}x + 2','y = −5x + 4','y = −{5/2}x + 4'],
+   ex:'Subtract 5x: 2y = −5x + 4. Divide everything by 2: y = −{5/2}x + 2.'},
+  {q:'Solve 3x + 0.5y = 2 for y.', on:[[0,4],[1,-2]],
+   c:['y = −6x + 4','y = 6x + 4','y = −3x + 2','y = −1.5x + 1'],
+   ex:'Subtract 3x: 0.5y = −3x + 2. Dividing by 0.5 is the same as multiplying by 2: y = −6x + 4.'},
+  {q:'Which equation matches the graph?', g:{lines:[[[0,-1],[2,3]]], pts:[[0,-1],[2,3]]}, useGraph:true,
+   c:['y = 2x − 1','y = −2x − 1','y = 2x + 1','y = {1/2}x − 1'],
+   ex:'It crosses the y-axis at −1 (b = −1). From (0, −1) to (2, 3): up 4, right 2, so m = {4/2} = 2.'},
+  {q:'Maya has $60 saved. She deposits $15 every week. Which equation gives the total y in her account after x weeks?', on:[[0,60],[2,90]],
+   c:['y = 15x + 60','y = 60x + 15','y = 15x','y = 75x'],
+   ex:'Rate (per week) = m = 15. Starting amount = b = 60. So y = 15x + 60.'},
+  {type:'num', q:'Using y = 15x + 60, how much money will Maya have after 6 weeks? (dollars)', a:'150', calc:'15*6+60',
+   ex:'y = 15(6) + 60 = 90 + 60 = <b>$150</b>.'},
+  {type:'num', q:'The cost y (dollars) to rent a paddleboat for x hours is y = 2.5x + 5. You have $20. How many hours can you rent it?', a:'6', calc:'(20-5)/2.5',
+   ex:'20 = 2.5x + 5 → 15 = 2.5x → x = <b>6 hours</b>.'},
+  {type:'num', q:'Joining a cheer team and going to x competitions costs y = 10x + 50 dollars. You have $95. How many competitions can you attend?', a:'4', calc:'Math.floor((95-50)/10)',
+   ex:'95 = 10x + 50 → 45 = 10x → x = 4.5. You can’t go to half a competition, so the answer is <b>4</b>.'},
+  {type:'num', q:'A garden against a wall is fenced on three sides: two lengths y and one width x. The fence is 26 feet long, so 2y + x = 26. What is the length when the width is 4 feet?', a:'11', calc:'(26-4)/2',
+   ex:'Solve for y: 2y = −x + 26, so y = −{1/2}x + 13. With x = 4: y = −2 + 13 = <b>11 feet</b>.'},
+]},
+
+{ id:'slope-day1', title:'Slope Day 1: Finding Slope', date:'Oct 7', deck:'Slope Day 1', qs:[
+  {q:'Slope measures how steep a line is. Which formula gives the slope?',
+   c:['change in y ÷ change in x (rise over run)','change in x ÷ change in y (run over rise)','x-value + y-value','the y-value where the line crosses the y-axis'],
+   ex:'Slope m = rise ÷ run = (y₂ − y₁) ÷ (x₂ − x₁). (Fun fact from class: m may come from the French word <i>monter</i>, “to climb.”)'},
+  slopeQ([1,2],[5,10]),
+  slopeQ([5,-2],[-1,2]),
+  slopeQ([-4,5],[1,3]),
+  slopeQ([2,-3],[2,6]),
+  slopeQ([-3,6],[2,6]),
+  {q:'The slope of EVERY horizontal line is…', c:['0','undefined','1','different for each line'],
+   ex:'Horizontal lines have no rise: {0/run} = 0.'},
+  {q:'The slope of EVERY vertical line is…', c:['undefined','0','1','−1'],
+   ex:'Vertical lines have no run, and you can’t divide by 0, so the slope is undefined.'},
+  {type:'num', q:'Find the slope of the line.', g:{lines:[[[-2,0],[2,3]]], pts:[[-2,0,'(−2, 0)'],[2,3,'(2, 3)']]}, a:'3/4', slopePts:[[-2,0],[2,3]],
+   ex:'From (−2, 0) to (2, 3): rise 3, run 4. m = <b>{3/4}</b>.'},
+  {type:'num', q:'Find the slope of the line.', g:{lines:[[[-2,5],[2,-1]]], pts:[[-2,5,'(−2, 5)'],[2,-1,'(2, −1)']]}, a:'-3/2', slopePts:[[-2,5],[2,-1]],
+   ex:'From (−2, 5) to (2, −1): rise −6, run 4. m = {{−6||4}} = <b>−{3/2}</b>. It falls left to right, so the slope is negative.'},
+  {q:'Which line is steeper: a line with slope −5 or a line with slope 3?',
+   c:['Slope −5. Steepness is the size of the number (5 > 3); the sign only tells the direction.','Slope 3, because 3 is greater than −5.','They are equally steep.','You can’t tell without a graph.'],
+   ex:'Compare the absolute values: |−5| = 5 and |3| = 3. The bigger one is steeper.'},
+  {q:'Line A passes through (0, 1) and (2, 5). Line B passes through (1, 0) and (3, 4). Are the lines parallel?',
+   c:['Yes. Both have slope 2, and they are different lines.','No. They have different slopes.','No. Line B crosses the x-axis.','You can’t tell from points.'],
+   ex:'Line A: {4/2} = 2. Line B: {4/2} = 2. Same slope and different lines → parallel.'},
+  {q:'Are the lines x = −3 and y = −3 parallel?',
+   c:['No. x = −3 is vertical and y = −3 is horizontal, so they cross.','Yes. They both use −3.','Yes. Both have slope 0.','Yes. Both have undefined slope.'],
+   ex:'One vertical line and one horizontal line always cross at a right angle, so they are not parallel.'},
+  {q:'Are the lines x = 1 and x = −8 parallel?',
+   c:['Yes. Both are vertical lines.','No. They use different numbers.','No. Vertical lines always cross.','Yes. Both have slope 0.'],
+   ex:'All vertical lines are parallel to each other (same undefined slope, never touch).'},
+]},
+
+{ id:'slope-day2', title:'Slope Day 2: Using Slope', date:'Oct 8', deck:'slope day 2', qs:[
+  {type:'num', q:'A pharmacy fills 15 prescriptions in 60 minutes. What is the unit rate in prescriptions per minute?', a:'1/4', calc:'15/60',
+   ex:'{15/60} = <b>{1/4}</b>: 1 prescription every 4 minutes.'},
+  {type:'num', q:'A bike rental charges an initial fee plus a daily fee. 2 days cost $50 and 6 days cost $110. What is the daily fee? (dollars)', a:'15', calc:'(110-50)/(6-2)',
+   ex:'Daily fee = slope = {{110 − 50||6 − 2}} = {60/4} = <b>$15 per day</b>.'},
+  {q:'Why can’t you find that daily fee by just doing 50 ÷ 2?',
+   c:['Because of the initial fee. The cost isn’t proportional, so use change in cost ÷ change in days.','Because 50 ÷ 2 isn’t a whole number.','Because you should do 2 ÷ 50 instead.','You can. The daily fee is $25.'],
+   ex:'When there’s a starting fee, a unit rate like 50 ÷ 2 mixes the fee in. The slope (change ÷ change) removes it.'},
+  {type:'num', q:'What is the initial fee for that bike rental? (dollars)', a:'20', calc:'50-15*2',
+   ex:'50 = 15(2) + b → 50 = 30 + b → b = <b>$20</b>. Check: 15(6) + 20 = 110 ✓.'},
+  {type:'num', q:'Find n so the line through (2, −4) and (5, n) has slope 3.', a:'5', calc:'3*(5-2)+(-4)',
+   ex:'{{n − (−4)||5 − 2}} = 3 → {{n + 4||3}} = 3 → n + 4 = 9 → <b>n = 5</b>.'},
+  {type:'num', q:'Find k so the line through (2, 1) and (6, k) has slope 3.', a:'13', calc:'1+3*(6-2)',
+   ex:'{{k − 1||6 − 2}} = 3 → k − 1 = 12 → <b>k = 13</b>.'},
+  {type:'num', q:'Find k so the line through (−3, k) and (1, 2) has slope −2.', a:'10', calc:'2-(-2)*(1-(-3))',
+   ex:'{{2 − k||1 − (−3)}} = −2 → {{2 − k||4}} = −2 → 2 − k = −8 → <b>k = 10</b>.'},
+  {type:'num', q:'Find k so the line through (2, −3) and (k, 1) has slope {2/3}.', a:'8', calc:'2+(1-(-3))/(2/3)',
+   ex:'{{1 − (−3)||k − 2}} = {2/3} → {{4||k − 2}} = {2/3} → k − 2 = 6 → <b>k = 8</b>.'},
+  {q:'You graph a line with slope {1/8} through (0, 3). Starting at (0, 3), which point is also on the line?', pointOn:'y = {1/8}x + 3',
+   c:['(8, 4)','(1, 11)','(4, 8)','(3, 8)'], ex:'Slope {1/8} means up 1, right 8: (0 + 8, 3 + 1) = (8, 4).'},
+  {q:'A line with slope −{7/4} passes through (0, 10). Which other point is on the line?', pointOn:'y = −{7/4}x + 10',
+   c:['(4, 3)','(4, 17)','(7, 6)','(−4, 3)'], ex:'Slope −{7/4} means down 7, right 4: (0 + 4, 10 − 7) = (4, 3).'},
+  {q:'Which description matches the graph?', g:{lines:[[[0,2],[2,3]]], pts:[[0,2],[2,3]]},
+   c:['Slope {1/2}, passes through (0, 2)','Slope 2, passes through (0, 2)','Slope {1/2}, passes through (2, 0)','Slope −{1/2}, passes through (0, 2)'],
+   ex:'It crosses the y-axis at (0, 2). From there: up 1, right 2, so the slope is {1/2}.'},
+  {q:'A line has slope −{3/2} and passes through (4, 1). Which equation (y = mx + b) represents it?', on:[[4,1],[0,7]],
+   c:['y = −{3/2}x + 7','y = −{3/2}x + 1','y = {3/2}x − 5','y = −{3/2}x − 5'],
+   ex:'Plug in the point: 1 = −{3/2}(4) + b → 1 = −6 + b → b = 7. So y = −{3/2}x + 7.'},
+  {q:'A graph is a straight line through the origin. What kind of relationship is it?',
+   c:['Proportional','Non-proportional','Not linear','Horizontal'],
+   ex:'Straight line + passes through (0, 0) = proportional.'},
+]},
+
+{ id:'quiz-review', title:'Quiz Review: Graphing & Slope', date:'Oct 9', deck:'review for quiz', qs:[
+  {q:'Parallel lines have…', c:['the same slope and different y-intercepts','different slopes and the same y-intercept','slopes that add to 0','the same slope and the same y-intercept'],
+   ex:'Same slope = same steepness. Different y-intercepts = they never touch. (Same slope AND same intercept is the same line. Vertical lines are the exception: they’re all parallel to each other.)'},
+  {q:'Which line is parallel to y = 3x − 2?', c:['y = 3x + 5','y = −3x − 2','y = {1/3}x − 2','y = −{1/3}x + 5'],
+   ex:'Parallel lines need the same slope, 3.'},
+  {q:'What is the equation of the horizontal line through (2, −4)?', on:[[2,-4],[0,-4]], c:['y = −4','x = 2','x = −4','y = 2'],
+   ex:'Every point on a horizontal line has the same y-value, here −4.'},
+  {q:'What is the equation of the vertical line through (2, −4)?', on:[[2,-4],[2,0]], c:['x = 2','y = −4','x = −4','y = 2'],
+   ex:'Every point on a vertical line has the same x-value, here 2.'},
+  {type:'num', q:'What is the slope of y = −{2/5}x + 7?', a:'-2/5', slopeOf:'y = −{2/5}x + 7', ex:'In y = mx + b, m is the slope: <b>−{2/5}</b>.'},
+  {type:'num', q:'What is the y-intercept of y = 4x − 9?', a:'-9', yint:'y = 4x − 9', ex:'In y = mx + b, b is the y-intercept: <b>−9</b>.'},
+  {q:'Which equation matches the graph?', g:{lines:[[[-6,3],[6,3]]], pts:[[0,3]]}, useGraph:true, c:['y = 3','x = 3','y = 3x','y = x + 3'],
+   ex:'A horizontal line through y = 3 is y = 3.'},
+  {q:'Which equation matches the graph?', g:{lines:[[[0,2],[2,0]]], pts:[[0,2],[2,0]]}, useGraph:true, c:['y = −x + 2','y = x + 2','y = −x − 2','y = 2x − 1'],
+   ex:'y-intercept 2. It goes down 1 for every 1 to the right, so m = −1: y = −x + 2.'},
+  slopeQ([8,3],[2,10]),
+  slopeQ([-3,1],[-1,5]),
+  {q:'Are y = −1 and y = 5 parallel?', c:['Yes. Both are horizontal lines with slope 0.','No. They have different y-values.','No. One is below the x-axis and one is above.','Yes. Both have undefined slope.'],
+   ex:'Both are horizontal (slope 0) and they never meet, so they are parallel.'},
+  {q:'Which pair of lines is parallel?', c:['y = 2x + 1 and y = 2x − 4','y = 2x + 1 and y = −2x + 1','y = 2x + 1 and y = {1/2}x + 1','y = 2x + 1 and y = x + 2'],
+   ex:'Only the first pair has the same slope (2) with different y-intercepts.'},
+]},
+
+{ id:'prop-1', title:'Proportional Relationships 1', date:'Oct 15', deck:'GREEN proportional relationships 1', qs:[
+  {q:'A GRAPH shows a proportional relationship when…', c:['it is a straight line through the origin','it is any straight line','it is a line that goes up','it crosses the y-axis above 0'],
+   ex:'Both parts matter: straight line AND passes through (0, 0).'},
+  {q:'A TABLE shows a proportional relationship when…', c:['every y ÷ x gives the same unit rate','the x-values go up by 1','the y-values keep getting bigger','the first x-value is 1'],
+   ex:'Divide y by x for every column. If they all match, it’s proportional.'},
+  {q:'Which equation shows a proportional relationship?', c:['y = 6x','y = 6x + 1','y = x + 6','y = 6'],
+   ex:'Proportional equations look like y = kx, with nothing added on.'},
+  {q:'Andrew earns $18 per hour mowing lawns. Is the money he earns proportional to the hours he mows?',
+   c:['Yes. 0 hours earns $0 and y ÷ x is always 18.','No. The total keeps changing.','No. There’s a starting fee.','Only after the first hour.'],
+   ex:'y = 18x has the y = kx form, so it’s proportional.'},
+  {q:'Uptown Tickets charges $7 per ticket plus a $3 processing fee per order. Is the cost proportional to the number of tickets?',
+   c:['No. 1 ticket costs $10 per ticket, but 2 tickets cost $17, which is $8.50 per ticket.','Yes. It goes up by $7 each time.','Yes. $7 is the constant of proportionality.','No, because 7 is odd.'],
+   ex:'y = 7x + 3 has a “+ 3,” so it isn’t proportional (10 ÷ 1 ≠ 17 ÷ 2).'},
+  {q:'Which table shows a proportional relationship?',
+   t:[{cap:'Table A', rows:[['x',2,4,6],['y',5,10,15]]},{cap:'Table B', rows:[['x',3,4,7],['y',5,10,15]]}],
+   c:['Table A: every y ÷ x is {5/2}','Table B: every y ÷ x is {5/3}','Both tables','Neither table'],
+   ex:'A: {5/2}, {10/4}, {15/6} all equal {5/2} ✓. B: {5/3}, {10/4}, {15/7} are all different.'},
+  {q:'Fun Center rents popcorn machines for $20 per hour plus a $32 rental fee. Is cost proportional to hours?',
+   c:['No. Because of the $32 fee, renting for 0 hours still costs $32.','Yes. It’s $20 every hour.','Yes. 32 and 20 are both even.'],
+   ex:'y = 20x + 32: the graph starts at 32, not at the origin.'},
+  {q:'Mrs. Green needs 2 cups of sugar for every cake. Is the amount of sugar proportional to the number of cakes?',
+   c:['Yes. Sugar = 2 × cakes, and 0 cakes needs 0 cups.','No. You need sugar even for 0 cakes.','No. 2 cups isn’t a unit rate.'],
+   ex:'y = 2x is in y = kx form.'},
+  {q:'Tyler has $280 in savings and deposits $20 each week. Is the money in the account proportional to the number of weeks?',
+   c:['No. He starts with $280, so the graph doesn’t pass through the origin.','Yes. He adds the same $20 every week.','Yes. 280 ÷ 20 = 14.'],
+   ex:'y = 20x + 280. A constant rate alone isn’t enough; it also has to start at 0.'},
+  {q:'Is the relationship in the graph proportional?', g:{x:[0,6],y:[0,6],lines:[[[0,2],[4,4]]], ray:true, pts:[[0,2],[4,4]]},
+   c:['No. The line doesn’t pass through the origin.','Yes. It’s a straight line.','Yes. It goes up.','No. The line isn’t straight.'],
+   ex:'It starts at (0, 2), not (0, 0), so it’s not proportional.'},
+  {q:'Is the relationship in the graph proportional?', g:{x:[0,6],y:[0,6],lines:[[[0,0],[2,3]]], ray:true, pts:[[0,0],[2,3,'(2, 3)']]},
+   c:['Yes. It’s a straight line through the origin.','No. It doesn’t start at 1.','No. The slope isn’t a whole number.','You can’t tell.'],
+   ex:'Straight line + through (0, 0) = proportional (here k = {3/2}).'},
+  {q:'Do {5/8} and {15/25} form a proportion?', c:['No. The cross products are 125 and 120, which aren’t equal.','Yes, because 5 × 3 = 15.','Yes. Both fractions are less than 1.','Yes. The cross products are equal.'],
+   ex:'5 × 25 = 125 and 8 × 15 = 120. Not equal → not a proportion.'},
+  {q:'In y = kx, what is k called?', c:['the constant of proportionality (it is also the slope)','the y-intercept','the x-intercept','the initial value'],
+   ex:'k = m: “k” is just the name used for proportional relationships.'},
+]},
+
+{ id:'prop-2', title:'Proportional Relationships 2: Equations', date:'Oct 16', deck:'proportional relationships 2', qs:[
+  {q:'The graph shows distance driven on a highway. Which equation represents the line?',
+   g:{x:[0,5],y:[0,300],ys:30,yl:60,xt:'Time (hours)',yt:'Distance (miles)',lines:[[[0,0],[1,60]]],ray:true,pts:[[1,60,'(1, 60)'],[3,180,'(3, 180)']]}, useGraph:true,
+   c:['y = 60x','y = 180x','y = 3x','y = x + 60'], ex:'k = {180/3} = 60 miles per hour. Through the origin, so y = 60x.'},
+  {q:'In that driving graph, what does the slope mean?', c:['The car travels 60 miles per hour.','The car has driven for 60 hours.','The car started 60 miles away.','The car travels 1 mile every 60 hours.'],
+   ex:'Slope = miles ÷ hours = 60 miles per hour.'},
+  {q:'Which equation represents the proportional relationship in the table?', on:[[1,8],[2,16]],
+   t:[{rows:[['x',0.5,1,1.5,2],['y',4,8,12,16]]}], c:['y = 8x','y = 4x','y = {1/8}x','y = x + 4'],
+   ex:'k = y ÷ x = 4 ÷ 0.5 = 8 (check: 16 ÷ 2 = 8). y = 8x.'},
+  {q:'Neil can type y words in x minutes, where y = 45x. What does 45 represent?',
+   c:['Neil types 45 words per minute (the constant of proportionality).','Neil types for 45 minutes.','Neil had already typed 45 words before he started.','Neil types 1 word every 45 minutes.'],
+   ex:'k is the unit rate: words per minute.'},
+  {q:'A tree is 10 inches in diameter and grows 2.5 inches per year. Let y be the diameter (inches) after x years. Which is true?',
+   c:['Non-proportional; y = 2.5x + 10','Proportional; y = 2.5x','Proportional; y = 10x','Non-proportional; y = 10x + 2.5'],
+   ex:'The rate is 2.5 per year and the starting value is 10, so y = 2.5x + 10. The + 10 makes it non-proportional.'},
+  {q:'It costs $6 per hour to rent a scooter. Which is true?', c:['Proportional; y = 6x','Non-proportional; y = 6x + 1','Proportional; y = x + 6','Non-proportional; y = 6'],
+   ex:'No starting fee: 0 hours costs $0. y = 6x.'},
+  {q:'A theme park charges a $40 entrance fee plus $2 per ride. Which equation fits?', on:[[0,40],[5,50]], c:['y = 2x + 40','y = 40x + 2','y = 42x','y = 2x'],
+   ex:'Rate = $2 per ride (m), initial value = $40 (b).'},
+  {type:'num', q:'Pete’s Pizza charges $8 per pizza plus a $3 delivery charge. What is the slope?', a:'8', slopeOf:'y = 8x + 3',
+   ex:'Slope = the rate = <b>8</b> ($8 per pizza). The $3 is the y-intercept.'},
+  {type:'num', q:'The graph shows the cost of concert tickets. How much do 14 tickets cost? (dollars)', a:'182', calc:'(26/2)*14',
+   g:{x:[0,10],y:[0,130],ys:10,yl:20,xt:'Tickets',yt:'Cost ($)',lines:[[[0,0],[2,26]]],ray:true,pts:[[2,26,'(2, 26)'],[5,65,'(5, 65)'],[9,117,'(9, 117)']]},
+   ex:'k = 26 ÷ 2 = $13 per ticket. 13 × 14 = <b>$182</b>.'},
+  {type:'num', q:'The graph shows the cost of apples. What is the unit rate in dollars per pound?', a:'1.5', calc:'4.5/3',
+   g:{x:[0,6],y:[0,9],xt:'Apples (pounds)',yt:'Cost ($)',lines:[[[0,0],[1,1.5]]],ray:true,pts:[[1,1.5,'(1, 1.5)'],[3,4.5,'(3, 4.5)']]},
+   ex:'The point (1, 1.5) means 1 pound costs $1.50. Unit rate = <b>1.5</b>.'},
+  {type:'num', q:'The graph shows the speed of a vehicle. Find the speed in miles per minute.', a:'1/2', calc:'0.25/0.5',
+   g:{x:[0,2],y:[0,1],xs:0.5,ys:0.25,xl:0.5,yl:0.25,xt:'Time (minutes)',yt:'Distance (miles)',lines:[[[0,0],[1,0.5]]],ray:true,pts:[[0.5,0.25,'(½, ¼)'],[1,0.5,'(1, ½)']]},
+   ex:'At 1 minute the distance is {1/2} mile, so the speed is <b>{1/2} mile per minute</b>.'},
+  {q:'Hannah has $50 saved and deposits $15 each week: y = 15x + 50. What does 50 represent?',
+   c:['The initial value (what she starts with)','How much she saves each week','The number of weeks','Her total after 1 week'],
+   ex:'In y = mx + b, b is the initial value; m (15) is the rate.'},
+  {q:'Which word means “the rate of change in a linear relationship”?', c:['Slope','Intercept','Origin','Coordinate'],
+   ex:'Slope = rise ÷ run = constant rate of change.'},
+]},
+
+{ id:'prop-practice', title:'Proportional Practice (Capture the Flag)', date:'Oct 20', deck:'prop practice (CTF)', qs:[
+  {q:'The number of toys y a machine makes is proportional to the minutes x it runs. It makes 6 toys in 4 minutes. Which equation represents this?', on:[[4,6],[2,3]],
+   c:['y = {3/2}x','y = {2/3}x','y = 6x','y = 4x + 2'], ex:'k = {6/4} = {3/2} toys per minute.'},
+  {type:'num', q:'How many toys will that machine make in 1 hour?', a:'90', calc:'60*3/2', ex:'1 hour = 60 minutes. y = {3/2}(60) = <b>90 toys</b>.'},
+  {q:'Kayak rental cost is proportional to hours. It costs $32 for 4 hours. Which equation?', on:[[4,32],[1,8]],
+   c:['y = 8x','y = 32x','y = 4x','y = {1/8}x'], ex:'k = 32 ÷ 4 = 8 dollars per hour.'},
+  {q:'What does the slope of that kayak equation mean?', c:['It costs $8 per hour to rent the kayak.','It costs $32 per hour.','You rent it for 8 hours.','It costs $8 to start.'],
+   ex:'Slope = dollars per hour.'},
+  {type:'num', q:'How much does it cost to rent the kayak for 7 hours? (dollars)', a:'56', calc:'8*7', ex:'y = 8(7) = <b>$56</b>.'},
+  {q:'An equilateral triangle has sides of length 2x + 3. What is its perimeter?', c:['6x + 9','2x + 9','6x + 3','5x + 6'],
+   ex:'3 equal sides: 3(2x + 3) = 6x + 9.'},
+  {type:'num', q:'A printer prints 45 pages in 3 minutes at a constant rate. How many minutes will it take to print 120 pages?', a:'8', calc:'120/(45/3)',
+   ex:'Rate = 45 ÷ 3 = 15 pages per minute. 120 ÷ 15 = <b>8 minutes</b>.'},
+  {q:'Car A travels y = 55x miles in x hours. Car B travels 120 miles in 2 hours at a constant speed. Which car is faster?',
+   c:['Car B: 60 mph vs. 55 mph','Car A: 55 mph vs. 60 mph','They go the same speed','You can’t tell'], ex:'Car B: 120 ÷ 2 = 60 mph, which is more than 55.'},
+  {q:'Is the relationship in the table proportional?', t:[{rows:[['x',1,2,3],['y',4,8,13]]}],
+   c:['No. 13 ÷ 3 isn’t 4, so the unit rates aren’t all the same.','Yes. y goes up every time.','Yes. 4 ÷ 1 = 4.','No. The x-values are too small.'],
+   ex:'{4/1} = 4 and {8/2} = 4, but {13/3} ≈ 4.33. One mismatch is enough to make it non-proportional.'},
+  {q:'Which equation represents the line?', g:{x:[0,8],y:[0,8],lines:[[[0,0],[4,3]]],ray:true,pts:[[0,0],[4,3,'(4, 3)']]}, useGraph:true,
+   c:['y = {3/4}x','y = {4/3}x','y = 3x','y = x + 3'], ex:'Through the origin with k = {3/4}: y = {3/4}x.'},
+  {q:'On a graph of apple cost (x = pounds, y = dollars), what does the point (1, 1.5) mean?',
+   c:['1 pound of apples costs $1.50','1.5 pounds cost $1','Each apple costs $1','1 apple costs $15'], ex:'(x, y) = (pounds, dollars) = (1, 1.50).'},
+  {q:'On that same graph, what does the point (0, 0) mean?', c:['0 pounds of apples cost $0','The apples are free','You bought 1 pound','It is the most expensive point'],
+   ex:'Every proportional graph passes through (0, 0): buying 0 pounds of apples costs $0.'},
+]},
+
+{ id:'standard-form', title:'C4 L5: Graphing Standard Form', date:'Oct 27', deck:'C4 L5 Graphing Standard Form', qs:[
+  {q:'Which equation is in standard form (Ax + By = C)?', c:['3x − 4y = 12','−2x + y = 5','y = 3x + 1','{1/2}x + y = 3'],
+   ex:'Standard form rules: x term first with A ≥ 0, all integers (no fractions or decimals), and the GCF of A, B, C is 1.'},
+  {q:'Why is −2x + y = 5 NOT in standard form?', c:['A (the x coefficient) can’t be negative','It has a y term','C must be 0','B must be bigger than A'],
+   ex:'Multiply everything by −1 to fix it: 2x − y = −5.'},
+  {q:'Why is 2x + 4y = 6 NOT in standard form?', c:['A, B and C share a factor of 2, but their GCF must be 1','A must be bigger than B','C can’t be even','It IS in standard form'],
+   ex:'Divide everything by 2: x + 2y = 3.'},
+  {q:'Rewrite y = x − 6 in standard form.', on:[[6,0],[0,-6]], form:'standard', c:['x − y = 6','−x + y = −6','x + y = 6','y − x = −6'],
+   ex:'Subtract x: −x + y = −6. A can’t be negative, so multiply by −1: x − y = 6.'},
+  {q:'Rewrite y = {2/3}x − {1/6} in standard form.', on:[[0,-1/6],[0.25,0]], form:'standard', c:['4x − 6y = 1','4x + 6y = 1','−4x + 6y = −1','2x − 3y = {1/2}'],
+   ex:'Multiply by 6 to clear fractions: 6y = 4x − 1. Move 4x: −4x + 6y = −1. Multiply by −1: 4x − 6y = 1.'},
+  {q:'Rewrite −x + 2y = 8 in standard form.', on:[[-8,0],[0,4]], form:'standard', c:['x − 2y = −8','x + 2y = 8','−x + 2y = 8','x − 2y = 8'],
+   ex:'Multiply everything by −1: x − 2y = −8.'},
+  {q:'Solve 2x − 3y = 6 for y.', on:[[0,-2],[3,0]], c:['y = {2/3}x − 2','y = −{2/3}x + 2','y = 2x − 6','y = {3/2}x − 2'],
+   ex:'−3y = −2x + 6. Divide by −3: y = {2/3}x − 2.'},
+  {type:'num', q:'What is the slope of x − 4y = −12?', a:'1/4', slopeOf:'x − 4y = −12', ex:'−4y = −x − 12 → y = {1/4}x + 3. Slope = <b>{1/4}</b>.'},
+  {type:'num', q:'What is the y-intercept of x − 4y = −12?', a:'3', yint:'x − 4y = −12', ex:'Set x = 0: −4y = −12 → y = <b>3</b>.'},
+  {q:'What are the intercepts of 2x − y = 8?', intercepts:'2x − y = 8',
+   c:['x-intercept (4, 0), y-intercept (0, −8)','x-intercept (−4, 0), y-intercept (0, 8)','x-intercept (8, 0), y-intercept (0, 2)','x-intercept (0, 4), y-intercept (−8, 0)'],
+   ex:'x-int: set y = 0 → 2x = 8 → x = 4. y-int: set x = 0 → −y = 8 → y = −8.'},
+  {type:'num', q:'What is the x-intercept of x + 3y = −3? (just the x-value)', a:'-3', xint:'x + 3y = −3', ex:'Set y = 0: x = <b>−3</b>.'},
+  {q:'Which equation matches the graph?', g:{lines:[[[0,2],[6,0]]], pts:[[0,2,'(0, 2)'],[6,0,'(6, 0)']]}, useGraph:true,
+   c:['x + 3y = 6','3x + y = 6','x − 3y = 6','x + 3y = 2'], ex:'Check both intercepts: (6, 0): 6 + 0 = 6 ✓. (0, 2): 0 + 3(2) = 6 ✓.'},
+  {q:'What are the intercepts of 5x − y = 10?', intercepts:'5x − y = 10', c:['(2, 0) and (0, −10)','(−2, 0) and (0, 10)','(10, 0) and (0, 5)','(0, 2) and (−10, 0)'],
+   ex:'y = 0: 5x = 10 → x = 2. x = 0: −y = 10 → y = −10.'},
+  {q:'Write 4x + y = 5 in slope-intercept form.', on:[[0,5],[1,1]], c:['y = −4x + 5','y = 4x + 5','y = −4x − 5','y = 5x + 4'],
+   ex:'Subtract 4x from both sides: y = −4x + 5.'},
+]},
+
+{ id:'point-slope', title:'C4 L6: Point-Slope Form', date:'Oct 29', deck:'C4 L6 Point-Slope Form', qs:[
+  {q:'Point-slope form of a line is…', c:['y − y₁ = m(x − x₁)','y = mx + b','Ax + By = C','m = (y₂ − y₁) ÷ (x₂ − x₁)'],
+   ex:'m is the slope and (x₁, y₁) is a point on the line.'},
+  {q:'Write the point-slope equation of the line through (−5, 2) with slope {3/4}.', on:[[-5,2],[-1,5]],
+   c:['y − 2 = {3/4}(x + 5)','y + 2 = {3/4}(x − 5)','y − 2 = {3/4}(x − 5)','y − 5 = {3/4}(x + 2)'],
+   ex:'y − 2 = {3/4}(x − (−5)) → y − 2 = {3/4}(x + 5). Subtracting a negative turns into “+.”'},
+  {q:'Write the point-slope equation of the line through (−3, −1) with slope −2.', on:[[-3,-1],[-2,-3]],
+   c:['y + 1 = −2(x + 3)','y − 1 = −2(x − 3)','y + 3 = −2(x + 1)','y + 1 = 2(x + 3)'],
+   ex:'y − (−1) = −2(x − (−3)) → y + 1 = −2(x + 3).'},
+  {q:'In y + 4 = −2(x + 1), what are the slope and the point?', c:['slope −2, point (−1, −4)','slope −2, point (1, 4)','slope 2, point (−1, −4)','slope −2, point (4, 1)'],
+   ex:'Rewrite it as y − (−4) = −2(x − (−1)). The signs inside flip, so the point is (−1, −4).'},
+  {q:'A line has slope {1/3} and passes through (6, 1). Which is its slope-intercept form?', on:[[6,1],[0,-1]],
+   c:['y = {1/3}x − 1','y = {1/3}x + 1','y = {1/3}x + 3','y = 3x − 17'],
+   ex:'y − 1 = {1/3}(x − 6) → y − 1 = {1/3}x − 2 → y = {1/3}x − 1.'},
+  {q:'Same line (slope {1/3}, through (6, 1)). Which is its standard form?', on:[[6,1],[3,0]], form:'standard',
+   c:['x − 3y = 3','x + 3y = 3','−x + 3y = −3','3x − y = 3'],
+   ex:'Start from y = {1/3}x − 1. Multiply by 3: 3y = x − 3. Move x: −x + 3y = −3. Multiply by −1: x − 3y = 3.'},
+  {q:'A line has slope −2 and passes through (2, −1). Which is its point-slope form?', on:[[2,-1],[0,3]],
+   c:['y + 1 = −2(x − 2)','y − 1 = −2(x + 2)','y + 2 = −2(x − 1)','y + 1 = 2(x − 2)'], ex:'y − (−1) = −2(x − 2) → y + 1 = −2(x − 2).'},
+  {q:'Same line (slope −2, through (2, −1)). Which is its slope-intercept form?', on:[[2,-1],[0,3]],
+   c:['y = −2x + 3','y = −2x − 5','y = −2x + 1','y = 2x − 5'], ex:'y + 1 = −2x + 4 → y = −2x + 3.'},
+  {q:'Same line again. Which is its standard form?', on:[[2,-1],[0,3]], form:'standard',
+   c:['2x + y = 3','2x − y = 3','−2x − y = −3','2x + y = −3'], ex:'From y = −2x + 3, add 2x to both sides: 2x + y = 3.'},
+  {q:'Write the line through (2, −1) and (4, 5) in slope-intercept form.', on:[[2,-1],[4,5]],
+   c:['y = 3x − 7','y = 3x + 5','y = {1/3}x − {5/3}','y = −3x + 5'],
+   ex:'m = {{5 − (−1)||4 − 2}} = {6/2} = 3. Plug in (4, 5): 5 = 3(4) + b → b = −7. y = 3x − 7.'},
+  {type:'num', q:'What is the x-intercept of y − 5 = 2(x − 1)?', a:'-3/2', xint:'y − 5 = 2(x − 1)',
+   ex:'Set y = 0: −5 = 2(x − 1) → −5 = 2x − 2 → −3 = 2x → x = <b>−{3/2}</b>.'},
+  {type:'num', q:'What is the x-intercept of y = {3/4}x + 3?', a:'-4', xint:'y = {3/4}x + 3', ex:'Set y = 0: 0 = {3/4}x + 3 → {3/4}x = −3 → x = <b>−4</b>.'},
+  {q:'A dentist charges y = 200x + 100 dollars to remove x teeth. What does 100 represent?',
+   c:['The office-visit fee, paid even when 0 teeth are removed','The cost per tooth','The number of teeth','The total for 1 tooth'],
+   ex:'b (the y-intercept) is the starting cost when x = 0. The 200 is the cost per tooth.'},
+  {q:'A braking car’s speed is y = −10x + 70 (mph after x seconds). What does −10 mean?',
+   c:['The speed drops 10 mph every second','The car started at 10 mph','It takes 10 seconds to stop','The car speeds up 10 mph every second'],
+   ex:'A negative slope is a decrease per second. 70 is the speed before braking.'},
+]},
+
+{ id:'halloween', title:'🎃 Halloween Linear Equations', date:'Oct 30', deck:'halloween themed linear equations practice', qs:[
+  {q:'🎃 Write the equation of the line through (3, 8) and (1, 2).', on:[[3,8],[1,2]], c:['y = 3x − 1','y = 3x + 1','y = {1/3}x + 7','y = −3x + 17'],
+   ex:'m = {{2 − 8||1 − 3}} = {{−6||−2}} = 3. Plug in (1, 2): 2 = 3 + b → b = −1. y = 3x − 1.'},
+  {type:'num', q:'👻 What is the x-intercept of y = −4x − 2?', a:'-1/2', xint:'y = −4x − 2', ex:'0 = −4x − 2 → 4x = −2 → x = <b>−{1/2}</b>.'},
+  {type:'num', q:'🦇 What is the slope of 3y + 6x = 9?', a:'-2', slopeOf:'3y + 6x = 9', ex:'3y = −6x + 9 → y = −2x + 3. Slope = <b>−2</b>.'},
+  {type:'num', q:'🦇 What is the x-intercept of 3y + 6x = 9?', a:'3/2', xint:'3y + 6x = 9', ex:'Set y = 0: 6x = 9 → x = <b>{3/2}</b> (or 1.5).'},
+  {type:'num', q:'🧪 A witch’s cauldron holds 150 fl oz of potion and drains 6 fl oz per minute: y = −6x + 150. After how many minutes is it empty?', a:'25', calc:'150/6',
+   ex:'Empty means y = 0: 0 = −6x + 150 → 6x = 150 → x = <b>25 minutes</b>.'},
+  {q:'🧪 In y = −6x + 150, what does 150 represent?', c:['The amount of potion at the start (150 fl oz)','The minutes until it’s empty','How fast it drains','The potion left after 1 minute'],
+   ex:'The y-intercept is the starting amount (x = 0 minutes).'},
+  {q:'🎃 A pumpkin patch charges $5 to get in plus $3 per pumpkin. Which equation gives the total cost y for x pumpkins?', on:[[0,5],[2,11]],
+   c:['y = 3x + 5','y = 5x + 3','y = 8x','y = 3x'], ex:'Rate $3 per pumpkin (m), entry $5 (b).'},
+  {type:'num', q:'🎃 You have $26. How many pumpkins can you buy?', a:'7', calc:'(26-5)/3', ex:'26 = 3x + 5 → 21 = 3x → x = <b>7</b>.'},
+  {q:'🕸️ Which point lies on y + 3 = 4(x − 1)?', pointOn:'y + 3 = 4(x − 1)', c:['(1, −3)','(−1, 3)','(3, 1)','(1, 3)'],
+   ex:'Point-slope form y − y₁ = m(x − x₁) shows the point (1, −3). Check: −3 + 3 = 0 and 4(1 − 1) = 0 ✓.'},
+  {q:'🧛 Which equation matches the graph?', g:{lines:[[[-2,5],[2,-3]]], pts:[[-2,5,'(−2, 5)'],[2,-3,'(2, −3)']]}, useGraph:true,
+   c:['y = −2x + 1','y = 2x + 1','y = −{1/2}x + 1','y = −2x − 1'], ex:'m = {{−3 − 5||2 − (−2)}} = {{−8||4}} = −2. It crosses the y-axis at 1.'},
+  {q:'💀 What is the point-slope form of the line with slope −{2/3} through (3, 0)?', on:[[3,0],[0,2]],
+   c:['y − 0 = −{2/3}(x − 3)','y − 3 = −{2/3}(x − 0)','y + 0 = −{2/3}(x + 3)','y = −{2/3}x + 3'], ex:'y − y₁ = m(x − x₁) with (x₁, y₁) = (3, 0).'},
+  {q:'👻 For 4y + 2x = 8, what are the slope and the y-intercept?', c:['slope −{1/2}, y-intercept 2','slope 2, y-intercept 8','slope −2, y-intercept 4','slope {1/2}, y-intercept 2'],
+   check:{slopeOf:'4y + 2x = 8', slope:-0.5, yint:2}, ex:'4y = −2x + 8 → y = −{1/2}x + 2.'},
+]},
+
+{ id:'lin-practice', title:'Linear Equations Practice', date:'Nov 9', deck:'linear equations practice', qs:[
+  {q:'How can you tell a relationship is proportional from a GRAPH?', c:['It’s a straight line through the origin','It’s a straight line','It goes up from left to right','It touches the y-axis'],
+   ex:'It has to be straight AND go through (0, 0).'},
+  {q:'How can you tell a relationship is proportional from a TABLE?', c:['Every y ÷ x is the same unit rate','The y-values go up by the same amount each time','The x-values go up by 1','There’s a 0 in the table'],
+   ex:'Going up by the same amount only means linear. Proportional needs y ÷ x to be the same in every column.'},
+  {q:'How can you tell a relationship is proportional from an EQUATION?', c:['It can be written as y = kx, with no + b','It has an x and a y','It’s y = mx + b with b not 0','It’s in standard form'],
+   ex:'y = kx, nothing added on.'},
+  {q:'Rewrite {1/2}x + 3y = 4 in standard form.', on:[[8,0],[0,4/3]], form:'standard', c:['x + 6y = 8','x + 3y = 4','x + 6y = 4','2x + 3y = 8'],
+   ex:'Multiply every term by 2: x + 6y = 8.'},
+  {q:'Rewrite y = 5x − 3 in standard form.', on:[[0,-3],[1,2]], form:'standard', c:['5x − y = 3','−5x + y = −3','5x + y = 3','5x − y = −3'],
+   ex:'−5x + y = −3. Multiply by −1 so A is positive: 5x − y = 3.'},
+  {q:'Is 3x + 5y = 2 in standard form?', c:['Yes. A is positive, all are integers, and the GCF is 1.','No. A must be bigger than B.','No. C must be bigger than A.','No. It has to be solved for y.'],
+   ex:'It passes every standard-form rule.'},
+  {q:'A gym charges a $35 membership fee plus $12 per month. Which is true?', c:['Not proportional; y = 12x + 35','Proportional; y = 12x','Not proportional; y = 35x + 12','Proportional; y = 47x'],
+   ex:'Rate 12, initial value 35. The + 35 makes it not proportional.'},
+  {q:'A bike rental costs $4 per hour. Which is true?', c:['Proportional; y = 4x','Not proportional; y = 4x + 1','Proportional; y = x + 4','Not proportional; y = 4'],
+   ex:'No starting fee, so y = 4x.'},
+  {q:'The line through (2, −3) with slope 4, in point-slope form:', on:[[2,-3],[3,1]], c:['y + 3 = 4(x − 2)','y − 3 = 4(x + 2)','y + 2 = 4(x − 3)','y + 3 = −4(x − 2)'],
+   ex:'y − (−3) = 4(x − 2) → y + 3 = 4(x − 2).'},
+  {q:'…in slope-intercept form:', on:[[2,-3],[3,1]], c:['y = 4x − 11','y = 4x + 5','y = 4x − 3','y = −4x + 5'], ex:'y + 3 = 4x − 8 → y = 4x − 11.'},
+  {q:'…in standard form:', on:[[2,-3],[3,1]], form:'standard', c:['4x − y = 11','4x + y = 11','−4x + y = −11','4x − y = −11'],
+   ex:'From y = 4x − 11: −4x + y = −11. Multiply by −1: 4x − y = 11.'},
+  {type:'num', q:'What is the y-intercept of x + 6y = 24?', a:'4', yint:'x + 6y = 24', ex:'Set x = 0: 6y = 24 → y = <b>4</b>. (Slope-intercept: y = −{1/6}x + 4.)'},
+  {q:'What are the intercepts of x − 3y = 9?', intercepts:'x − 3y = 9', c:['(9, 0) and (0, −3)','(−9, 0) and (0, 3)','(3, 0) and (0, −9)','(9, 0) and (0, 3)'],
+   ex:'y = 0 → x = 9. x = 0 → −3y = 9 → y = −3.'},
+  {q:'Write x − {3/2}y = 0 in slope-intercept form.', on:[[0,0],[3,2]], c:['y = {2/3}x','y = {3/2}x','y = −{2/3}x','y = x − {3/2}'],
+   ex:'−{3/2}y = −x. Multiply by −{2/3}: y = {2/3}x. (It goes through the origin, so it’s proportional.)'},
+]},
+
+{ id:'chapter-review', title:'⭐ Chapter 4 Test Review (mixed)', date:'Test 11/11', deck:'all decks', star:true, qs:[
+  slopeQ([-2,7],[3,-3]),
+  slopeQ([4,1],[4,-6]),
+  {q:'Write the line through (1, 4) and (3, 10) in slope-intercept form.', on:[[1,4],[3,10]], c:['y = 3x + 1','y = 3x + 4','y = 2x + 2','y = {1/3}x + {11/3}'],
+   ex:'m = {6/2} = 3. 4 = 3(1) + b → b = 1. y = 3x + 1.'},
+  {q:'Write the point-slope equation: slope −{1/4} through (8, −2).', on:[[8,-2],[4,-1]], c:['y + 2 = −{1/4}(x − 8)','y + 2 = −{1/4}(x + 8)','y + 8 = −{1/4}(x − 2)','y + 2 = {1/4}(x − 8)'],
+   ex:'y − (−2) = −{1/4}(x − 8) → y + 2 = −{1/4}(x − 8).'},
+  {q:'Rewrite y = −{2/5}x + 3 in standard form.', on:[[0,3],[7.5,0]], form:'standard', c:['2x + 5y = 15','2x − 5y = 15','−2x − 5y = −15','2x + 5y = 3'],
+   ex:'Multiply by 5: 5y = −2x + 15. Add 2x: 2x + 5y = 15.'},
+  {q:'What are the intercepts of 3x − 2y = 12?', intercepts:'3x − 2y = 12', c:['(4, 0) and (0, −6)','(−4, 0) and (0, 6)','(6, 0) and (0, −4)','(4, 0) and (0, 6)'],
+   ex:'y = 0: 3x = 12 → x = 4. x = 0: −2y = 12 → y = −6.'},
+  {q:'Which equation matches the graph?', g:{lines:[[[0,3],[6,0]]], pts:[[0,3,'(0, 3)'],[6,0,'(6, 0)']]}, useGraph:true,
+   c:['y = −{1/2}x + 3','y = −2x + 3','y = {1/2}x + 3','y = −{1/2}x + 6'], ex:'y-intercept 3. Down 3 over 6 to the right: m = −{3/6} = −{1/2}.'},
+  {q:'A gym charges $25 to join plus $10 per visit. Is cost proportional to visits?', c:['No; y = 10x + 25','Yes; y = 10x','Yes; y = 35x','No; y = 25x + 10'],
+   ex:'The $25 joining fee is the initial value, so it isn’t proportional.'},
+  {type:'num', q:'The graph shows a proportional relationship. What is the constant of proportionality k?', a:'4', calc:'12/3',
+   g:{x:[0,6],y:[0,24],ys:2,yl:4,lines:[[[0,0],[3,12]]],ray:true,pts:[[0,0],[3,12,'(3, 12)']]}, ex:'k = y ÷ x = 12 ÷ 3 = <b>4</b>.'},
+  {type:'num', q:'Find k so the line through (k, 5) and (2, −1) has slope 3.', a:'4', calc:'2-(-1-5)/3',
+   ex:'{{−1 − 5||2 − k}} = 3 → −6 = 3(2 − k) → −6 = 6 − 3k → 3k = 12 → <b>k = 4</b>.'},
+  {q:'Which line is parallel to y = −{1/2}x + 1 and passes through (0, −4)?', on:[[0,-4],[2,-5]], c:['y = −{1/2}x − 4','y = 2x − 4','y = −{1/2}x + 4','y = {1/2}x − 4'],
+   ex:'Parallel → same slope −{1/2}. Through (0, −4) → b = −4.'},
+  {q:'A canoe rental costs $95 for 3 days and $175 for 7 days (initial fee + daily fee). Which equation fits?', on:[[3,95],[7,175]],
+   c:['y = 20x + 35','y = 25x + 20','y = 35x + 20','y = 20x'],
+   ex:'Daily fee = {{175 − 95||7 − 3}} = {80/4} = 20. 95 = 20(3) + b → b = 35.'},
+  {q:'Solve x − y = −2 for y.', on:[[0,2],[1,3]], c:['y = x + 2','y = −x − 2','y = x − 2','y = −x + 2'], ex:'−y = −x − 2. Multiply by −1: y = x + 2.'},
+  {q:'A taxi ride costs y = 0.7x + 10 dollars for x miles. What does 10 represent?', c:['The starting fee before any miles','The cost per mile','The number of miles','The total for 1 mile'],
+   ex:'The y-intercept is the cost at 0 miles.'},
+  {type:'num', q:'What is the x-intercept of y + 6 = 3(x + 1)?', a:'1', xint:'y + 6 = 3(x + 1)', ex:'Set y = 0: 6 = 3x + 3 → 3 = 3x → x = <b>1</b>.'},
+  {q:'Which equation is a horizontal line?', c:['y = −2','x = −2','y = −2x','x + y = −2'], ex:'Horizontal lines are “y = number” (slope 0).'},
+]},
+];
+/*DATA-END*/
+
+// ---------- rendering ----------
+function esc(s){return String(s).replace(/&(?![a-z]+;|#\d+;)/g,'&amp;');}
+function fmt(s){
+  s=esc(s);
+  s=s.replace(/\{\{(.+?)\|\|(.+?)\}\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  s=s.replace(/\{(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  return s;
+}
+function nice(v){ const r=Math.round(v*1000)/1000; return r<0?'−'+Math.abs(r):String(r); }
+function graphSVG(g){
+  const x0=g.x?g.x[0]:-6, x1=g.x?g.x[1]:6, y0=g.y?g.y[0]:-6, y1=g.y?g.y[1]:6;
+  const xs=g.xs||1, ys=g.ys||1, quad1=(x0===0&&y0===0);
+  const xl=g.xl||(quad1?xs:2), yl=g.yl||(quad1?ys:2);
+  const W=320,H=320, pl=quad1?(g.yt?52:36):10, pb=quad1?(g.xt?42:26):10, pr=12, pt=12;
+  const w=W-pl-pr, h=H-pt-pb;
+  const X=x=>pl+(x-x0)/(x1-x0)*w, Y=y=>pt+(y1-y)/(y1-y0)*h;
+  let s=`<svg class="graph" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial" font-size="11">`;
+  s+=`<defs><clipPath id="clp"><rect x="${pl}" y="${pt}" width="${w}" height="${h}"/></clipPath>
+      <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs>`;
+  const eps=1e-9;
+  for(let v=Math.ceil(x0/xs)*xs; v<=x1+eps; v+=xs) s+=`<line x1="${X(v)}" y1="${pt}" x2="${X(v)}" y2="${pt+h}" stroke="#e5e7eb"/>`;
+  for(let v=Math.ceil(y0/ys)*ys; v<=y1+eps; v+=ys) s+=`<line x1="${pl}" y1="${Y(v)}" x2="${pl+w}" y2="${Y(v)}" stroke="#e5e7eb"/>`;
+  // axes
+  s+=`<line x1="${pl}" y1="${Y(Math.max(y0,Math.min(0,y1)))}" x2="${pl+w}" y2="${Y(Math.max(y0,Math.min(0,y1)))}" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="${X(Math.max(x0,Math.min(0,x1)))}" y1="${pt}" x2="${X(Math.max(x0,Math.min(0,x1)))}" y2="${pt+h}" stroke="#374151" stroke-width="1.5"/>`;
+  const ax=Y(Math.max(y0,Math.min(0,y1))), ay=X(Math.max(x0,Math.min(0,x1)));
+  for(let v=Math.ceil(x0/xl)*xl; v<=x1+eps; v+=xl){ if(Math.abs(v)<eps && !quad1) continue;
+    s+=`<text x="${X(v)}" y="${ax+14}" text-anchor="middle" fill="#4b5563">${nice(v)}</text>`; }
+  for(let v=Math.ceil(y0/yl)*yl; v<=y1+eps; v+=yl){ if(Math.abs(v)<eps) continue;
+    s+=`<text x="${ay-5}" y="${Y(v)+4}" text-anchor="end" fill="#4b5563">${nice(v)}</text>`; }
+  if(!quad1){ s+=`<text x="${pl+w-4}" y="${ax-6}" text-anchor="end" font-style="italic" font-size="13">x</text>`;
+              s+=`<text x="${ay+6}" y="${pt+12}" font-style="italic" font-size="13">y</text>`; }
+  if(g.xt) s+=`<text x="${pl+w/2}" y="${H-6}" text-anchor="middle" font-size="12" font-weight="600">${g.xt}</text>`;
+  if(g.yt) s+=`<text x="14" y="${pt+h/2}" text-anchor="middle" font-size="12" font-weight="600" transform="rotate(-90 14 ${pt+h/2})">${g.yt}</text>`;
+  // lines
+  s+=`<g clip-path="url(#clp)">`;
+  (g.lines||[]).forEach(L=>{
+    let [[a,b],[c,d]]=L, p,q;
+    if(a===c){ p=[a,y0]; q=[a,y1]; }
+    else { const m=(d-b)/(c-a), f=x=>b+m*(x-a);
+      p = g.ray? [a,b] : [x0,f(x0)]; q=[x1,f(x1)];
+      // pull endpoints inside the box so the arrowheads are visible
+      const clip=(P,Q)=>{ let [px,py]=P; if(py>y1){px=a+(y1-b)/m;py=y1;} if(py<y0){px=a+(y0-b)/m;py=y0;} return [px,py]; };
+      p = g.ray? p : clip(p,q); q=clip(q,p); }
+    const shrink=0.985, mx=(X(p[0])+X(q[0]))/2, my=(Y(p[1])+Y(q[1]))/2;
+    const sx=v=>mx+(v-mx)*shrink, sy=v=>my+(v-my)*shrink;
+    s+=`<line x1="${sx(X(p[0]))}" y1="${sy(Y(p[1]))}" x2="${sx(X(q[0]))}" y2="${sy(Y(q[1]))}" stroke="#2563eb" stroke-width="2.5"
+        marker-end="url(#arw)" ${g.ray?'':'marker-start="url(#arw)"'}/>`;
+  });
+  s+=`</g>`;
+  (g.pts||[]).forEach(([x,y,lab])=>{
+    s+=`<circle cx="${X(x)}" cy="${Y(y)}" r="4" fill="#111827"/>`;
+    if(lab){ const right = X(x) < pl+w*0.7; s+=`<text x="${X(x)+(right?7:-7)}" y="${Y(y)-7}" text-anchor="${right?'start':'end'}" font-size="12" font-weight="600" fill="#111827" stroke="#fff" stroke-width="3" paint-order="stroke">${lab}</text>`; }
+  });
+  return s+'</svg>';
+}
+function tablesHTML(ts){
+  return '<div class="tables">'+ts.map(t=>'<table class="t">'+(t.cap?`<caption>${t.cap}</caption>`:'')+
+    t.rows.map(r=>'<tr>'+r.map((v,i)=>i===0?`<th>${v}</th>`:`<td>${typeof v==='number'?nice(v):v}</td>`).join('')+'</tr>').join('')+'</table>').join('')+'</div>';
+}
+
+// ---------- answer checking for typed answers ----------
+function parseNum(str){
+  let s=String(str).trim().toLowerCase().replace(/[−–—]/g,'-').replace(/[\s$,]/g,'');
+  if(/^(undefined|undef|und|noslope|none)$/.test(s)) return {u:true};
+  let m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
+  if(m){ const d=parseFloat(m[2]); if(d===0) return {u:true}; return {v:parseFloat(m[1])/d, dec:false}; }
+  if(/^-?\d*\.?\d+$/.test(s)) return {v:parseFloat(s), dec:/\./.test(s)};
+  return null;
+}
+function numCorrect(input, ans){
+  const u=parseNum(input); if(!u) return null;
+  const a=parseNum(ans);
+  if(a.u) return !!u.u;
+  if(u.u) return false;
+  return Math.abs(u.v-a.v) < (u.dec ? 0.006 : 1e-9);
+}
+
+// ---------- app ----------
+const app=document.getElementById('app');
+const best=id=>{ try{return JSON.parse(localStorage.getItem('pt-best-'+id));}catch(e){return null;} };
+const saveBest=(id,sc,tot)=>{ const b=best(id); if(!b || sc/tot > b.s/b.t) localStorage.setItem('pt-best-'+id, JSON.stringify({s:sc,t:tot})); };
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+let S=null; // current run state
+
+function home(){
+  S=null; window.scrollTo(0,0);
+  let h=`<header class="top"><h1>📐 Math Practice Tests</h1><p>6 Accel · Chapter 4 · one test for each class lesson</p></header><div class="wrap">`;
+  TESTS.forEach((t,i)=>{
+    const b=best(t.id); let badge='<span class="badge">New</span>';
+    if(b){ const p=Math.round(100*b.s/b.t); badge=`<span class="badge ${p>=90?'good':p>=70?'mid':''}">Best ${p}%</span>`; }
+    h+=`<button class="card test ${t.star?'star':''}" onclick="start(${i})"><span class="num">${t.star?'⭐':i+1}</span>
+        <span class="meta"><div class="title">${fmt(t.title)}</div><div class="sub">${t.date} · ${t.qs.length} questions</div></span>${badge}</button>`;
+  });
+  h+=`<p class="center muted" style="font-size:14px">Tap an answer to check it right away. Typed answers can be fractions (−2/3), decimals, or “undefined.”</p></div>`;
+  app.innerHTML=h;
+}
+function start(ti, only){
+  const t=TESTS[ti];
+  const idx = only || t.qs.map((_,i)=>i);
+  S={ti, idx, pos:0, results:[], order: idx.map(i=>t.qs[i].c? shuffle(t.qs[i].c.map((_,k)=>k)) : null)};
+  render();
+}
+function render(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], qi=S.idx[S.pos], Q=t.qs[qi], n=S.idx.length;
+  let h=`<div class="wrap"><div class="qhead"><button class="back" onclick="if(confirm('Leave this test? Your progress will be lost.'))home()">← Tests</button>
+    <span>${S.pos+1} / ${n}</span></div><div class="bar"><i style="width:${100*S.pos/n}%"></i></div>
+    <div class="card"><div class="muted" style="font-size:13px">${fmt(t.title)}</div><div class="q">${fmt(Q.q)}</div>`;
+  if(Q.g) h+=graphSVG(Q.g);
+  if(Q.t) h+=tablesHTML(Q.t);
+  if(Q.c){
+    S.order[S.pos].forEach(k=>{ h+=`<button class="choice" data-k="${k}" onclick="pick(${k})">${fmt(Q.c[k])}</button>`; });
+  } else {
+    h+=`<div class="numrow"><input id="ans" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Your answer"
+         onkeydown="if(event.key==='Enter')checkNum()"><button class="btn" style="width:auto;margin:0;padding:0 18px" id="chk" onclick="checkNum()">Check</button></div>
+        <div class="keys"><button class="key" onclick="ins('-')">−</button><button class="key" onclick="ins('/')">/</button><button class="key" onclick="ins('.')">.</button>
+        <button class="key" onclick="setAns('undefined')">undefined</button><button class="key" onclick="setAns('')">clear</button></div>
+        <div class="hint">Fractions like −3/2 or decimals like −1.5 both work.</div>`;
+  }
+  h+=`<div id="fb"></div></div></div>`;
+  app.innerHTML=h;
+}
+function ins(ch){ const el=document.getElementById('ans'); el.value+=ch; el.focus(); }
+function setAns(v){ const el=document.getElementById('ans'); el.value=v; el.focus(); }
+function feedback(ok, correctText, ex){
+  const last = S.pos===S.idx.length-1;
+  document.getElementById('fb').innerHTML = `<div class="fb ${ok?'ok':'bad'}"><span class="fbh">${ok?'✅ Correct!':'❌ Not quite. Answer: '+correctText}</span>${fmt(ex||'')}</div>
+    <button class="btn" id="next" onclick="next()">${last?'See my score':'Next →'}</button>`;
+  document.getElementById('next').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function pick(k){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], ok = k===0;
+  document.querySelectorAll('.choice').forEach(b=>{ b.disabled=true; const bk=+b.dataset.k;
+    if(bk===0) b.classList.add('correct'); else if(bk===k) b.classList.add('wrong'); });
+  S.results.push({qi:S.idx[S.pos], ok, given:Q.c[k]});
+  feedback(ok, fmt(Q.c[0]), Q.ex);
+}
+function checkNum(){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
+  const r=numCorrect(el.value, Q.a);
+  if(r===null){ el.style.borderColor='#f59e0b'; el.placeholder='Type a number, like 3/4 or −2'; el.value=''; return; }
+  el.disabled=true; document.getElementById('chk').disabled=true;
+  document.querySelectorAll('.key').forEach(b=>b.disabled=true);
+  S.results.push({qi:S.idx[S.pos], ok:r, given:el.value});
+  feedback(r, fmt(fracShow(Q.a)), Q.ex);
+}
+function next(){ if(S.pos < S.idx.length-1){ S.pos++; render(); } else results(); }
+function results(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], n=S.results.length, sc=S.results.filter(r=>r.ok).length, p=Math.round(100*sc/n);
+  if(S.idx.length===t.qs.length) saveBest(t.id, sc, n);
+  const msg = p===100?'🏆 Perfect!': p>=90?'🌟 Excellent!': p>=75?'👍 Nice work, review the misses below.': p>=50?'💪 Getting there. Retry the ones you missed.':'📚 Review the lesson, then try again.';
+  const missed=S.results.filter(r=>!r.ok).map(r=>r.qi);
+  let h=`<div class="wrap"><div class="card center"><div class="muted">${fmt(t.title)}</div><div class="score">${sc} / ${n}</div>
+    <div style="font-size:20px;font-weight:650">${p}%</div><p>${msg}</p>
+    ${missed.length?`<button class="btn" onclick="start(${S.ti},[${missed}])">Retry the ${missed.length} I missed</button>`:''}
+    <button class="btn ghost" onclick="start(${S.ti})">Retake the whole test</button>
+    <button class="btn ghost" onclick="home()">All tests</button></div>`;
+  if(missed.length){
+    h+=`<div class="card"><b>Review what you missed</b>`;
+    S.results.filter(r=>!r.ok).forEach(r=>{ const Q=t.qs[r.qi];
+      h+=`<div class="rev"><div>${fmt(Q.q)}</div><div class="muted">You said: ${fmt(String(r.given||'(blank)'))}</div>
+          <div><b>Answer:</b> ${Q.c?fmt(Q.c[0]):fmt(fracShow(Q.a))}</div><div class="muted">${fmt(Q.ex||'')}</div></div>`; });
+    h+=`</div>`;
+  }
+  app.innerHTML=h+'</div>';
+}
+home();
+</script>
+</body>
+</html>
