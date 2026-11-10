@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f766e">
+<title>Science CA#1: Practice Tests</title>
+<style>
+  :root { --ink:#1f2937; --muted:#6b7280; --bg:#f5f5fb; --card:#fff; --brand:#0f766e; --brand2:#14b8a6;
+          --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2; --line:#e5e7eb; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width:560px; margin:0 auto; padding:16px 14px calc(28px + env(safe-area-inset-bottom)); }
+  header.top { background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; padding:22px 16px 18px;
+    border-radius:0 0 22px 22px; padding-top:calc(22px + env(safe-area-inset-top)); }
+  header.top h1 { margin:0 0 4px; font-size:24px; }
+  header.top p { margin:0; opacity:.9; font-size:15px; }
+  .card { background:var(--card); border-radius:16px; padding:16px; margin:12px 0; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+  .test { display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; cursor:pointer; color:inherit; font:inherit; }
+  .test .num { flex:0 0 38px; height:38px; border-radius:12px; background:#ccfbf1; color:var(--brand); font-weight:700;
+    display:flex; align-items:center; justify-content:center; }
+  .test .meta { flex:1; min-width:0; }
+  .test .title { font-weight:650; }
+  .test .sub { color:var(--muted); font-size:14px; }
+  .badge { font-size:13px; font-weight:700; padding:3px 8px; border-radius:999px; background:#f3f4f6; color:var(--muted); white-space:nowrap; }
+  .badge.good { background:var(--okbg); color:var(--ok); }
+  .badge.mid { background:#fef9c3; color:#854d0e; }
+  .star { background:#fff7ed; border:2px solid #fdba74; }
+  .bar { height:8px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin:6px 0 2px; }
+  .bar > i { display:block; height:100%; background:var(--brand2); transition:width .3s; }
+  .qhead { display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--muted); }
+  .back { border:0; background:none; color:var(--brand); font:inherit; font-size:15px; padding:6px 0; cursor:pointer; }
+  .q { font-size:19px; font-weight:560; margin:6px 0 12px; }
+  .choice { display:block; width:100%; text-align:left; font:inherit; color:inherit; background:#fff; border:2px solid var(--line);
+    border-radius:14px; padding:13px 14px; margin:9px 0; cursor:pointer; min-height:52px; }
+  .choice:active { transform:scale(.99); }
+  .choice.correct { border-color:var(--ok); background:var(--okbg); }
+  .choice.wrong { border-color:var(--bad); background:var(--badbg); }
+  .choice[disabled] { cursor:default; }
+  .numrow { display:flex; gap:8px; }
+  .numrow input { flex:1; font:inherit; font-size:20px; padding:12px; border:2px solid var(--line); border-radius:12px; min-width:0; }
+  .numrow input:focus { outline:none; border-color:var(--brand2); }
+  .keys { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .key { font:inherit; border:1px solid var(--line); background:#f9fafb; border-radius:10px; padding:8px 14px; cursor:pointer; }
+  .btn { display:block; width:100%; font:inherit; font-weight:650; border:0; border-radius:14px; padding:14px; margin-top:12px;
+    background:var(--brand); color:#fff; cursor:pointer; }
+  .btn.ghost { background:#eef2ff; color:var(--brand); }
+  .fb { border-radius:14px; padding:12px 14px; margin-top:12px; }
+  .fb.ok { background:var(--okbg); }
+  .fb.bad { background:var(--badbg); }
+  .fb .fbh { display:block; margin-bottom:4px; font-weight:700; }
+  .hint { color:var(--muted); font-size:14px; margin-top:6px; }
+  .fr { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.85em; margin:0 2px; line-height:1.1; }
+  .fr > span:first-child { border-bottom:1.5px solid currentColor; padding:0 2px; }
+  .fr > span:last-child { padding:0 2px; }
+  svg.pic { display:block; width:100%; max-width:340px; height:auto; margin:4px auto 2px; }
+  svg.pic[width="170"] { max-width:170px; }
+  .cap { text-align:center; font-size:12px; color:var(--muted); margin-bottom:10px; }
+  svg.graph { display:block; width:100%; max-width:340px; margin:4px auto 10px; background:#fff; }
+  table.t { border-collapse:collapse; margin:6px auto 12px; font-size:16px; }
+  table.t caption { font-weight:650; font-size:14px; color:var(--muted); padding-bottom:4px; }
+  table.t td, table.t th { border:1.5px solid #9ca3af; padding:6px 10px; text-align:center; }
+  table.t th { background:#eef2ff; }
+  .tables { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .score { font-size:44px; font-weight:800; text-align:center; margin:6px 0 0; }
+  .center { text-align:center; }
+  .rev { border-top:1px solid var(--line); padding:10px 0; font-size:15px; }
+  .rev:first-child { border-top:0; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/*DATA-START*/
+// ---------- picture helpers ----------
+// Moon as seen from the Northern Hemisphere. p = fraction of the cycle: 0 new, .25 first quarter, .5 full, .75 third quarter.
+function moon(p){
+  const r=60, cx=80, cy=80; let lit='';
+  if(p===0.5) lit=`<circle cx="80" cy="80" r="60" fill="#fde68a"/>`;
+  else if(p!==0){
+    const waxing=p<0.5, rx=Math.abs(r*Math.cos(2*Math.PI*p)).toFixed(2), crescent=(p<0.25||p>0.75);
+    const os = waxing?1:0, ts = waxing?(crescent?0:1):(crescent?1:0);
+    lit=`<path d="M80,20 A60,60 0 0 ${os} 80,140 A${rx},60 0 0 ${ts} 80,20 Z" fill="#fde68a"/>`;
+  }
+  return `<svg class="pic" viewBox="0 0 160 160" width="170" height="170" xmlns="http://www.w3.org/2000/svg"><rect width="160" height="160" rx="14" fill="#0b1026"/>`+
+    `<circle cx="80" cy="80" r="60" fill="#334155"/>${lit}</svg><div class="cap">Moon as seen from the Northern Hemisphere</div>`;
+}
+// Sun, Earth and Moon in a line, with the middle body's shadow.
+function lineup(order){
+  const X=[60,190,290], col={Sun:'#fbbf24',Earth:'#3b82f6',Moon:'#cbd5e1'}, R={Sun:46,Earth:22,Moon:12};
+  let s=`<svg class="pic" viewBox="0 0 340 140" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial"><rect width="340" height="140" rx="14" fill="#0b1026"/>`;
+  const mid=order[1], mr=R[mid];
+  s+=`<polygon points="${X[1]},${70-mr} ${X[1]},${70+mr} 335,${70+mr*0.4} 335,${70-mr*0.4}" fill="#000" opacity=".55"/>`;
+  order.forEach((b,i)=>{ s+=`<circle cx="${X[i]}" cy="70" r="${R[b]}" fill="${col[b]}"/>`+
+    `<text x="${X[i]}" y="${b==='Sun'?132:70+R[b]+18}" fill="#fff" font-size="14" font-weight="600" text-anchor="middle">${b}</text>`; });
+  return s+`<text x="330" y="18" fill="#94a3b8" font-size="11" text-anchor="end">shadow →</text></svg><div class="cap">Not to scale</div>`;
+}
+// Earth with its tilted axis, beside the Sun. toward = the North Pole leans toward the Sun.
+function tilt(toward){
+  const a=23.5*Math.PI/180, cx=240, cy=80, L=62, dx=Math.sin(a)*L*(toward?-1:1), dy=Math.cos(a)*L;
+  let s=`<svg class="pic" viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial"><rect width="340" height="160" rx="14" fill="#0b1026"/>`;
+  s+=`<circle cx="20" cy="80" r="70" fill="#fbbf24"/><text x="40" y="84" font-size="14" font-weight="700" fill="#78350f">Sun</text>`;
+  for(const y of [45,80,115]) s+=`<line x1="100" y1="${y}" x2="185" y2="${y}" stroke="#fde68a" stroke-width="2" marker-end="url(#ar)"/>`;
+  s+=`<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fde68a"/></marker>`+
+     `<clipPath id="ec"><circle cx="${cx}" cy="${cy}" r="45"/></clipPath></defs>`;
+  s+=`<circle cx="${cx}" cy="${cy}" r="45" fill="#3b82f6"/><rect x="${cx}" y="${cy-45}" width="45" height="90" fill="#000" opacity=".45" clip-path="url(#ec)"/>`;
+  s+=`<line x1="${cx-dx}" y1="${cy+dy}" x2="${cx+dx}" y2="${cy-dy}" stroke="#fff" stroke-width="2.5"/>`;
+  s+=`<line x1="${cx-Math.cos(a)*45}" y1="${cy-Math.sin(a)*45*(toward?-1:1)}" x2="${cx+Math.cos(a)*45}" y2="${cy+Math.sin(a)*45*(toward?-1:1)}" stroke="#fde68a" stroke-dasharray="4 3" stroke-width="1.5"/>`;
+  s+=`<text x="${cx+dx+(toward?-6:6)}" y="${cy-dy-6}" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">N</text>`;
+  s+=`<text x="${cx-dx}" y="${cy+dy+16}" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">S</text>`;
+  return s+`</svg><div class="cap">Earth (white line = axis, dashed = equator). Not to scale.</div>`;
+}
+
+const TESTS = [
+{ id:'sci-earth', title:'Earth’s Movements: Day, Night & Year', date:'Earth-Moon-Sun', qs:[
+  {q:'What causes day and night on Earth?', c:['Earth rotating (spinning) on its axis','Earth revolving around the Sun','The Moon blocking the Sun','The Sun moving around Earth'],
+   ex:'Earth spins once about every 24 hours. The side facing the Sun has day; the side facing away has night.'},
+  {q:'About how long does it take Earth to rotate once?', c:['24 hours','365 days','29.5 days','1 hour'], ex:'One rotation = one day ≈ 24 hours.'},
+  {q:'What causes a year?', c:['Earth’s revolution: one full trip around the Sun','Earth’s rotation on its axis','The Moon’s trip around Earth','The changing tilt of Earth’s axis'],
+   ex:'One revolution around the Sun takes about 365¼ days, which is one year.'},
+  {q:'A year on Earth is about…', c:['365¼ days','24 hours','29½ days','12 hours'], ex:'The extra ¼ day is why we add a leap day every 4 years.'},
+  {q:'Which statement about rotation and revolution is correct?', c:['Rotation is spinning on an axis; revolution is moving around another object','Rotation is moving around the Sun; revolution is spinning','They mean the same thing','Only moons revolve'],
+   ex:'Rotate = spin (like a top). Revolve = go around (like a race car on a track).'},
+  {q:'What is an axis?', c:['An imaginary line through Earth’s center, from the North Pole to the South Pole, that Earth spins around','The path Earth takes around the Sun','The line between day and night','The equator'],
+   ex:'Earth spins around its axis, which is tilted about 23.5°.'},
+  {q:'What is an orbit?', c:['The path one object takes around another object in space','Spinning on an axis','A group of stars','A shadow in space'],
+   ex:'Earth orbits the Sun; the Moon orbits Earth.'},
+  {q:'Why does the Sun appear to rise in the east and set in the west?', c:['Earth rotates from west to east','The Sun orbits Earth from east to west','Earth goes around the Sun once a day','The Moon pushes the Sun across the sky'],
+   ex:'The Sun isn’t moving across our sky. We are spinning toward the east, so the Sun seems to come up there.'},
+  {q:'Why do we always see the same side of the Moon?', c:['The Moon rotates once in the same time it takes to orbit Earth once','The Moon doesn’t rotate at all','Earth’s rotation hides the other side','The far side is always dark'],
+   ex:'Both take about 27 days, so the same face always points at us. (The far side does get sunlight; we just never see it.) A full cycle of phases takes a bit longer, about 29.5 days, because Earth is moving around the Sun at the same time.'},
+  {q:'What does the Moon do while Earth revolves around the Sun?', c:['It revolves around Earth and travels with Earth around the Sun','It stays still in space','It orbits the Sun far away from Earth','It orbits Mars'],
+   ex:'The Moon is Earth’s satellite: it circles Earth as Earth circles the Sun.'},
+  {q:'When it is daytime where you live, what is true?', c:['Your side of Earth is facing the Sun','Your side of Earth is facing away from the Sun','The Moon is in its full phase','Earth has stopped rotating'],
+   ex:'Day = facing the Sun. Twelve hours or so later, Earth’s spin carries you to the dark side (night).'},
+  {q:'How long does the Moon take to go through all its phases, from new moon to the next new moon?', c:['About 29.5 days (about a month)','24 hours','365 days','7 days'],
+   ex:'The word “month” comes from “moon.”'},
+]},
+
+{ id:'sci-seasons', title:'Seasons, Latitude & Daylight', date:'Earth-Moon-Sun', qs:[
+  {q:'What causes the seasons on Earth?', c:['The tilt of Earth’s axis as Earth revolves around the Sun','Earth’s distance from the Sun changing','Earth’s rotation','Clouds blocking sunlight'],
+   ex:'As Earth orbits, first one hemisphere and then the other is tilted toward the Sun.'},
+  {q:'Earth’s axis is tilted about…', c:['23.5°','0°','45°','90°'], ex:'About 23.5 degrees, and it always points the same direction in space.'},
+  {q:'In this picture, the Northern Hemisphere is tilted toward the Sun. What season is it in the Northern Hemisphere?', svg:tilt(true), c:['Summer','Winter','Fall','Spring'],
+   ex:'Tilted toward the Sun = more direct sunlight and longer days = summer.'},
+  {q:'At that same moment, what season is it in the Southern Hemisphere?', svg:tilt(true), c:['Winter','Summer','Spring','The same season as the north'],
+   ex:'The Southern Hemisphere is tilted away from the Sun, so it has winter. The two hemispheres’ seasons are opposite.'},
+  {q:'Why is it warmer in summer?', c:['Sunlight hits more directly and the days are longer','Earth is closest to the Sun in summer','The Sun gets hotter in summer','The Moon reflects extra heat'],
+   ex:'Direct rays pack the same energy into a smaller area, and more daylight hours means more time to heat up.'},
+  {q:'Earth is actually closest to the Sun in early January. What does that tell us?', c:['Distance from the Sun does not cause the seasons','The Northern Hemisphere has summer in January','The Sun is hottest in January','Earth’s orbit is a perfect circle'],
+   ex:'January is winter in the north even though Earth is closest to the Sun, so tilt (not distance) causes seasons.'},
+  {q:'Which place has about 12 hours of daylight all year long?', c:['A city on the equator','A town near the North Pole','New York City','Antarctica'],
+   ex:'Near the equator the Sun’s rays stay fairly direct all year, so day length and temperature barely change.'},
+  {q:'Where are the changes in daylight the most extreme?', c:['Near the poles: 24-hour daylight in summer and 24-hour darkness in winter','At the equator','Halfway between the equator and the poles','They are the same everywhere'],
+   ex:'The farther from the equator (the higher the latitude), the bigger the seasonal swing in daylight.'},
+  {q:'In the Northern Hemisphere, the day with the MOST daylight is the…', c:['Summer solstice (about June 21)','Winter solstice (about December 21)','Spring equinox','Fall equinox'],
+   ex:'The winter solstice in December has the least daylight.'},
+  {q:'On an equinox (about March 20 and September 22), daylight lasts…', c:['About 12 hours everywhere on Earth','24 hours everywhere','Longer than any other day in the north','Zero hours at the equator'],
+   ex:'“Equinox” means “equal night.” Earth is still tilted, but sideways to the Sun, so neither hemisphere leans toward it.'},
+  {q:'In December, what season is it in Australia (Southern Hemisphere)?', c:['Summer','Winter','Fall','Spring'],
+   ex:'In December the Southern Hemisphere is tilted toward the Sun, so it’s summer there. Many Australians have Christmas at the beach!'},
+  {q:'In a Northern Hemisphere city like New York, what happens to daylight hours as summer turns into fall?', c:['They get shorter','They get longer','They stay at exactly 12 hours','They stop changing'],
+   ex:'After the June solstice, days get shorter until the December solstice.'},
+  {q:'What would happen if Earth’s axis were NOT tilted?', c:['There would be no seasons, and day length would stay about the same all year','The seasons would be stronger','There would be no day and night','It would be summer everywhere all year'],
+   ex:'Without tilt, neither hemisphere would lean toward the Sun, so sunlight and daylight wouldn’t change during the year.'},
+]},
+
+{ id:'sci-moon', title:'Phases of the Moon', date:'Earth-Moon-Sun', qs:[
+  {q:'What causes the phases of the Moon?', c:['As the Moon orbits Earth, we see different amounts of its sunlit half','Earth’s shadow covers part of the Moon','Clouds block part of the Moon','The Moon changes size'],
+   ex:'Earth’s shadow only reaches the Moon during a lunar eclipse. Phases come from our changing view of the lit half.'},
+  {q:'Where does moonlight come from?', c:['Sunlight reflecting off the Moon','The Moon makes its own light','Light from Earth’s cities','Light from other stars'], ex:'The Moon has no light of its own; it reflects sunlight, like a bike reflector.'},
+  {q:'How much of the Moon is lit by the Sun at any time (except during a lunar eclipse)?', c:['Half','All of it','None of it','It changes from none to all'],
+   ex:'The half facing the Sun is always lit. The phase is how much of that lit half faces Earth.'},
+  {q:'Which phase is this?', svg:moon(0.5), c:['Full moon','New moon','First quarter','Waxing gibbous'], ex:'The whole face is lit: full moon.'},
+  {q:'Which phase is this?', svg:moon(0.125), c:['Waxing crescent','Waning crescent','Waxing gibbous','First quarter'],
+   ex:'Thin sliver = crescent. Lit on the RIGHT = waxing (growing). Tip: a waxing moon lights up on the right, like the curve of a “D.”'},
+  {q:'Which phase is this?', svg:moon(0.25), c:['First quarter','Third quarter','Full moon','Waxing crescent'],
+   ex:'Half the face is lit, on the right, so it’s first quarter. It’s called a “quarter” because the Moon is ¼ of the way around its orbit.'},
+  {q:'Which phase is this?', svg:moon(0.375), c:['Waxing gibbous','Waning gibbous','Waxing crescent','Full moon'],
+   ex:'More than half lit = gibbous. Dark sliver on the left, lit on the right = waxing.'},
+  {q:'Which phase is this?', svg:moon(0.625), c:['Waning gibbous','Waxing gibbous','Third quarter','Waning crescent'],
+   ex:'More than half lit = gibbous. Lit on the LEFT = waning (shrinking).'},
+  {q:'Which phase is this?', svg:moon(0.75), c:['Third quarter','First quarter','Waning gibbous','New moon'],
+   ex:'Half lit on the left: third quarter (also called last quarter).'},
+  {q:'Which phase is this?', svg:moon(0.875), c:['Waning crescent','Waxing crescent','New moon','Third quarter'],
+   ex:'Thin sliver lit on the left, like the letter “C”: waning crescent. Next comes the new moon.'},
+  {q:'“Waxing” means…', c:['The lit part we see is growing','The lit part we see is shrinking','The Moon is moving away from Earth','The Moon is full'], ex:'Waxing = growing, from new moon toward full moon.'},
+  {q:'“Waning” means…', c:['The lit part we see is shrinking','The lit part we see is growing','The Moon is getting closer to Earth','The Moon is new'], ex:'Waning = shrinking, from full moon back toward new moon.'},
+  {q:'A “gibbous” moon is…', c:['More than half lit but not full','Less than half lit','Exactly half lit','Completely dark'], ex:'Gibbous = “humped”: bigger than a half, smaller than full.'},
+  {q:'A “crescent” moon is…', c:['Less than half lit: a thin curved sliver','More than half lit','Exactly half lit','Completely lit'], ex:'Crescent = the thin “banana” or “C” shape.'},
+  {q:'Which phase comes right after a full moon?', c:['Waning gibbous','Waxing gibbous','New moon','Waning crescent'], ex:'After full, the lit part starts shrinking, so it’s waning but still more than half lit.'},
+  {q:'Which is the correct order, starting at the new moon?', c:['New → waxing crescent → first quarter → waxing gibbous → full','New → waxing gibbous → first quarter → waxing crescent → full','New → full → first quarter → waxing crescent','New → waning crescent → third quarter → full'],
+   ex:'Full order: new, waxing crescent, first quarter, waxing gibbous, full, waning gibbous, third quarter, waning crescent, then new again.'},
+  {q:'During a new moon, where is the Moon?', c:['Between Earth and the Sun','On the far side of Earth from the Sun','Behind the Sun','It leaves its orbit'],
+   ex:'The lit half faces away from us, so we see the unlit side (or nothing at all).'},
+  {q:'During a full moon, where is the Moon?', c:['On the far side of Earth from the Sun (Earth is between the Sun and the Moon)','Between Earth and the Sun','Right next to the Sun in the sky','At the North Pole'],
+   ex:'The whole lit half faces Earth. That’s also the only time a lunar eclipse can happen.'},
+]},
+
+{ id:'sci-eclipse', title:'Solar & Lunar Eclipses', date:'Earth-Moon-Sun', qs:[
+  {q:'This lineup can cause which kind of eclipse?', svg:lineup(['Sun','Moon','Earth']), c:['Solar eclipse','Lunar eclipse','Both kinds','Neither'],
+   ex:'The Moon is in the middle, so its shadow lands on Earth and blocks the Sun: a solar eclipse.'},
+  {q:'This lineup can cause which kind of eclipse?', svg:lineup(['Sun','Earth','Moon']), c:['Lunar eclipse','Solar eclipse','Both kinds','Neither'],
+   ex:'Earth is in the middle, so Earth’s shadow falls on the Moon: a lunar eclipse.'},
+  {q:'What is an eclipse?', c:['When one object in space blocks light from reaching another, casting a shadow','When the Moon changes phase','When a planet passes behind a star','When Earth rotates'],
+   ex:'Eclipses are all about shadows: the Moon’s shadow (solar) or Earth’s shadow (lunar).'},
+  {q:'During a solar eclipse…', c:['the Moon’s shadow falls on Earth','Earth’s shadow falls on the Moon','the Sun’s shadow falls on Earth','Earth’s shadow falls on the Sun'], ex:'Sun → Moon → Earth. The Moon blocks the Sun for people in its shadow.'},
+  {q:'During a lunar eclipse…', c:['Earth’s shadow falls on the Moon','the Moon’s shadow falls on Earth','the Sun’s shadow falls on the Moon','the Moon’s shadow falls on the Sun'], ex:'Sun → Earth → Moon. Earth blocks sunlight from reaching the Moon.'},
+  {q:'A solar eclipse can only happen during which moon phase?', c:['New moon','Full moon','First quarter','Any phase'], ex:'At new moon the Moon is between Earth and the Sun, the only place it can block the Sun.'},
+  {q:'A lunar eclipse can only happen during which moon phase?', c:['Full moon','New moon','Third quarter','Any phase'], ex:'At full moon, Earth is between the Sun and the Moon.'},
+  {q:'Why don’t we get eclipses every month?', c:['The Moon’s orbit is tilted (about 5°), so most months it passes above or below the Sun–Earth line','The Moon stops orbiting some months','Earth’s tilt blocks the shadow','The Sun is too far away'],
+   ex:'The three bodies have to line up almost exactly, and that only happens a few times a year.'},
+  {q:'Which kind of eclipse can be seen by everyone on the night side of Earth?', c:['Lunar eclipse','Solar eclipse','Both kinds','Neither'],
+   ex:'Anyone who can see the Moon can see it darken. A total solar eclipse is only seen along a narrow path where the Moon’s small shadow lands.'},
+  {q:'During a total lunar eclipse, the Moon often looks…', c:['Reddish (sometimes called a “blood moon”)','Bright blue','Twice as big','Brighter than a full moon'],
+   ex:'A little sunlight bends through Earth’s atmosphere and reaches the Moon, tinting it red.'},
+  {q:'Why should you never look straight at a solar eclipse without special eclipse glasses?', c:['Sunlight can permanently damage your eyes','The Moon’s shadow is harmful to skin','It makes the eclipse end sooner','You can, it is safe'],
+   ex:'Even a thin sliver of the Sun is bright enough to burn your retina.'},
+  {q:'During a total solar eclipse, what happens where the shadow falls?', c:['The sky turns dark in the daytime for a few minutes','The Moon turns red','It becomes night everywhere on Earth','The Sun disappears for a whole day'],
+   ex:'Totality lasts only a few minutes, and only inside the Moon’s small shadow.'},
+]},
+
+{ id:'sci-planets', title:'Our Solar System: The Planets', date:'Solar System', qs:[
+  {q:'Which planets are the inner planets?', c:['Mercury, Venus, Earth, Mars','Jupiter, Saturn, Uranus, Neptune','Mercury, Venus, Jupiter, Saturn','Earth, Mars, Jupiter, Pluto'],
+   ex:'Order from the Sun: Mercury, Venus, Earth, Mars | asteroid belt | Jupiter, Saturn, Uranus, Neptune. (“My Very Eager Mother Just Served Us Nachos.”)'},
+  {q:'Which planets are the outer planets?', c:['Jupiter, Saturn, Uranus, Neptune','Mercury, Venus, Earth, Mars','Mars, Jupiter, Saturn, Pluto','Venus, Earth, Uranus, Neptune'], ex:'The four giants beyond the asteroid belt.'},
+  {q:'The inner planets are…', c:['Small, rocky and dense, with few or no moons','Huge and made mostly of gas','Icy and covered in rings','Stars that give off light'],
+   ex:'They’re also called the terrestrial (Earth-like) planets.'},
+  {q:'The outer planets are…', c:['Huge, made mostly of gas and ice, with rings and many moons','Small and rocky with few moons','The hottest planets','Planets with no gravity'],
+   ex:'Jupiter and Saturn are gas giants; Uranus and Neptune are ice giants.'},
+  {q:'What separates the inner planets from the outer planets?', c:['The asteroid belt, between Mars and Jupiter','Earth’s Moon','The Sun','Earth’s orbit'], ex:'The asteroid belt is a ring of rocky chunks between Mars and Jupiter.'},
+  {q:'Which planet is the largest?', c:['Jupiter','Saturn','Earth','Neptune'], ex:'Jupiter is so big that more than 1,000 Earths could fit inside it.'},
+  {q:'Which planet is closest to the Sun?', c:['Mercury','Venus','Mars','Earth'], ex:'Mercury is also the smallest planet.'},
+  {q:'Which planet is the hottest?', c:['Venus, because its thick atmosphere traps heat','Mercury, because it’s closest to the Sun','Mars','Jupiter'],
+   ex:'Tricky one! Venus is hotter than Mercury because its thick carbon-dioxide atmosphere traps heat (a runaway greenhouse effect).'},
+  {q:'Which planet is farthest from the Sun?', c:['Neptune','Uranus','Saturn','Pluto'], ex:'Pluto is farther, but it’s a dwarf planet, not a planet.'},
+  {q:'To be called a planet, an object must…', c:['Orbit the Sun, be big enough to be round, and clear its orbit of other objects','Have at least one moon','Have rings','Be made of rock'],
+   ex:'All three rules have to be true.'},
+  {q:'Why is Pluto called a dwarf planet?', c:['It hasn’t cleared other objects out of its orbit','It doesn’t orbit the Sun','It isn’t round','It has no moons'],
+   ex:'Pluto orbits the Sun and is round, but it shares its zone with many other icy objects. (It even has moons, like Charon.)'},
+  {q:'Which planets have rings?', c:['All four outer planets','Only Saturn','Only Jupiter and Saturn','All eight planets'], ex:'Saturn’s are the brightest, but Jupiter, Uranus and Neptune have faint rings too.'},
+  {q:'How is a planet different from a star?', c:['A planet doesn’t make its own light; it reflects light from a star','Planets are always bigger than stars','Planets make their own light','There is no difference'],
+   ex:'Stars like the Sun make light and heat. Planets shine only because they reflect starlight.'},
+  {q:'Which planet is called the “Red Planet”?', c:['Mars','Venus','Jupiter','Mercury'], ex:'Mars looks red because its soil is full of iron oxide: rust!'},
+]},
+
+{ id:'sci-gravity', title:'Distance, Size, Gravity & Motion', date:'Solar System', qs:[
+  {q:'What is an astronomical unit (AU)?', c:['The average distance from Earth to the Sun, about 150 million km (93 million miles)','The distance light travels in a year','The distance from Earth to the Moon','The width of the Sun'],
+   ex:'1 AU = Earth–Sun distance. It’s the “ruler” for distances inside the solar system.'},
+  {q:'About how many AU is Earth from the Sun?', c:['1 AU','0 AU','93 AU','150 AU'], ex:'1 AU is defined as Earth’s average distance from the Sun, so Earth is about 1 AU away.'},
+  {q:'Neptune is about 30 AU from the Sun. That means…', c:['Neptune is about 30 times farther from the Sun than Earth is','Neptune is 30 km from the Sun','Neptune is 30 times bigger than Earth','Neptune takes 30 days to orbit'],
+   ex:'30 × 150 million km ≈ 4.5 billion km. That’s why we use AU!'},
+  {q:'Why do scientists use AU instead of kilometers for distances in the solar system?', c:['The distances are so huge that kilometers give enormous numbers','AU is more exact than kilometers','Kilometers don’t work in space','AU measures size, not distance'],
+   ex:'It’s like measuring a road trip in miles instead of inches.'},
+  {q:'About how long does sunlight take to reach Earth?', c:['About 8 minutes','About 1 second','About 1 day','About 1 year'], ex:'Light is fast, but 150 million km is far: about 8 minutes.'},
+  {q:'How big is the Sun compared to Earth?', c:['About 109 Earths could line up across it','About the same size','About 2 Earths across','Earth is bigger'], ex:'More than a million Earths could fit inside the Sun.'},
+  {q:'Gravity is…', c:['A force of attraction that pulls objects with mass toward each other','A force that pushes objects apart','A force that only exists on Earth','The spinning of a planet'],
+   ex:'Everything with mass has gravity, even you. It’s just tiny for small objects.'},
+  {q:'How does an object’s mass affect its gravity?', c:['More mass means stronger gravity','More mass means weaker gravity','Mass has no effect on gravity','Only the color of a planet matters'],
+   ex:'That’s why the Sun, with by far the most mass, holds the whole solar system together.'},
+  {q:'How does distance affect gravity?', c:['The farther apart two objects are, the weaker the gravity between them','The farther apart, the stronger the gravity','Distance has no effect','Gravity only works when objects touch'],
+   ex:'Gravity gets weaker quickly as distance grows.'},
+  {q:'Why would you weigh more on Jupiter than on Earth?', c:['Jupiter has much more mass, so its gravity pulls harder','Jupiter is closer to the Sun','Your mass gets bigger on Jupiter','Jupiter spins more slowly'],
+   ex:'Your weight would be about 2½ times bigger. Your mass would stay the same.'},
+  {q:'On the Moon you would weigh about ⅙ as much as on Earth. What happens to your mass?', c:['It stays the same','It becomes ⅙ as much','It becomes 6 times more','It becomes zero'],
+   ex:'Mass = how much matter you have (doesn’t change). Weight = how hard gravity pulls on you (changes).'},
+  {q:'Inertia is…', c:['The tendency of an object to resist a change in its motion','The pull of the Sun’s gravity','The path of a planet around the Sun','A cloud of gas and dust'],
+   ex:'A moving object keeps moving in a straight line unless a force changes it.'},
+  {q:'What two things keep the planets in orbit around the Sun?', c:['Gravity (pulling toward the Sun) and inertia (wanting to keep moving straight)','Inertia only','Magnetism and solar wind','Rotation and tilt'],
+   ex:'Inertia tries to send the planet straight ahead; gravity keeps bending its path toward the Sun. Together they make a curved orbit.'},
+  {q:'If the Sun’s gravity suddenly disappeared, what would Earth do?', c:['Fly off in a straight line, because of inertia','Fall into the Sun','Stop moving','Keep orbiting the same way'],
+   ex:'Like letting go of a ball you’re swinging on a string: it flies off straight.'},
+  {q:'Compared with planets far from the Sun, planets close to the Sun…', c:['Move faster and have shorter years','Move slower and have longer years','Move at the same speed','Don’t revolve at all'],
+   ex:'Mercury’s year is only 88 Earth days; Neptune’s is about 165 Earth years.'},
+  {q:'What shape are the planets’ orbits?', c:['Ellipses (slightly stretched circles)','Perfect squares','Straight lines','Figure eights'], ex:'Most are very close to circles, but they’re slightly oval.'},
+  {q:'What is a nebula?', c:['A giant cloud of gas and dust in space','A very large planet','A type of eclipse','A phase of the Moon'], ex:'Stars and planets are born in nebulas.'},
+  {q:'How did our solar system form?', c:['Gravity pulled a spinning nebula (cloud of gas and dust) together into the Sun and planets','The planets broke off the Sun in a crash','It has always existed','Earth formed first and pulled in the others'],
+   ex:'About 4.6 billion years ago, most of the material became the Sun; the leftovers clumped into planets.'},
+]},
+
+{ id:'sci-vocab', title:'Vocabulary: All 19 Words', date:'Vocabulary', qs:[
+  {q:'Which word means: the spinning of an object on its axis?', c:['Rotation','Revolution','Orbit','Inertia'], ex:'Earth’s rotation causes day and night.'},
+  {q:'Which word means: the movement of one object around another object?', c:['Revolution','Rotation','Axis','Gravity'], ex:'Earth’s revolution around the Sun takes one year.'},
+  {q:'Which word means: the curved path an object follows around another object in space?', c:['Orbit','Axis','Rotation','Nebula'], ex:'Planets orbit the Sun; moons orbit planets.'},
+  {q:'Which word means: an imaginary line that an object spins around?', c:['Axis','Orbit','Eclipse','Revolution'], ex:'Earth’s axis runs from the North Pole to the South Pole.'},
+  {q:'Which word means: the yearly cycle of changes in temperature and daylight, caused by Earth’s tilt as it revolves?', c:['Seasons','Phases of the Moon','Revolution','Eclipse'], ex:'Winter, spring, summer, fall.'},
+  {q:'Which word means: when one object in space blocks light from reaching another, casting a shadow?', c:['Eclipse','Phases of the Moon','Nebula','New Moon'], ex:'Solar and lunar eclipses.'},
+  {q:'Which word means: one of the four small, rocky planets closest to the Sun?', c:['Inner Planet','Outer Planet','Astronomical Unit','Orbit'], ex:'Mercury, Venus, Earth, Mars.'},
+  {q:'Which word means: one of the four giant gas or ice planets beyond the asteroid belt?', c:['Outer Planet','Inner Planet','Nebula','Astronomical Unit'], ex:'Jupiter, Saturn, Uranus, Neptune.'},
+  {q:'Which word means: the different shapes of the lit Moon we see from Earth during a month?', c:['Phases of the Moon','Eclipse','Seasons','Waxing'], ex:'New, crescent, quarter, gibbous, full.'},
+  {q:'Which word means: the average distance between Earth and the Sun (about 150 million km)?', c:['Astronomical Unit','Orbit','Gravity','Revolution'], ex:'AU for short.'},
+  {q:'Which word means: the force of attraction between all objects that have mass?', c:['Gravity','Inertia','Orbit','Rotation'], ex:'More mass = more gravity.'},
+  {q:'Which word means: the tendency of an object to resist a change in its motion?', c:['Inertia','Gravity','Revolution','Axis'], ex:'Inertia + gravity = orbit.'},
+  {q:'Which word means: a giant cloud of gas and dust in space?', c:['Nebula','Outer Planet','Eclipse','Orbit'], ex:'Our solar system formed from one.'},
+  {q:'Which word means: the lit part of the Moon we see is getting bigger?', c:['Waxing','Waning','Gibbous Moon','Full Moon'], ex:'Waxing = growing.'},
+  {q:'Which word means: the lit part of the Moon we see is getting smaller?', c:['Waning','Waxing','Crescent Moon','New Moon'], ex:'Waning = shrinking.'},
+  {q:'Which word means: the whole side of the Moon facing Earth is lit?', c:['Full Moon','New Moon','Gibbous Moon','Waxing'], ex:'Earth is between the Sun and the Moon.'},
+  {q:'Which word means: the side of the Moon facing Earth is dark, because the Moon is between Earth and the Sun?', c:['New Moon','Full Moon','Crescent Moon','Waning'], ex:'The start of the phase cycle.'},
+  {q:'Which word means: more than half of the Moon’s face is lit, but not all of it?', c:['Gibbous Moon','Crescent Moon','Full Moon','New Moon'], ex:'Comes just before and just after the full moon.'},
+  {q:'Which word means: less than half of the Moon’s face is lit, in a thin curved shape?', c:['Crescent Moon','Gibbous Moon','Full Moon','Waxing'], ex:'The “banana” moon, just after or just before the new moon.'},
+]},
+
+{ id:'sci-review', title:'⭐ CA#1 Mixed Review', date:'Test Fri 11/13', star:true, qs:[
+  {q:'Which phase is this?', svg:moon(0.1), c:['Waxing crescent','Waning crescent','First quarter','New moon'], ex:'Thin sliver lit on the right: waxing crescent.'},
+  {q:'Which phase is this?', svg:moon(0.65), c:['Waning gibbous','Waxing gibbous','Third quarter','Full moon'], ex:'More than half lit, lit on the left: waning gibbous.'},
+  {q:'For the Sun, Earth and Moon to line up like this, what phase must the Moon be in?', svg:lineup(['Sun','Earth','Moon']), c:['Full moon','New moon','First quarter','Third quarter'],
+   ex:'With Earth in the middle, Earth sees the Moon’s whole lit face: full moon. (If they line up exactly, it’s a lunar eclipse.)'},
+  {q:'Here the Northern Hemisphere is tilted away from the Sun. What season is it in the Northern Hemisphere?', svg:tilt(false), c:['Winter','Summer','Spring','Fall'],
+   ex:'Tilted away = less direct sunlight and shorter days = winter. (It’s summer in the Southern Hemisphere.)'},
+  {q:'Which motion of Earth causes one year?', c:['Revolution around the Sun','Rotation on its axis','The Moon’s revolution','The tilt of the axis'], ex:'Rotation = day; revolution = year.'},
+  {q:'Which of these is NOT an outer planet?', c:['Mars','Jupiter','Uranus','Neptune'], ex:'Mars is the last inner planet, just before the asteroid belt.'},
+  {q:'Around June 21, how many hours of daylight does the North Pole get?', c:['24 hours','12 hours','0 hours','6 hours'], ex:'Summer at the pole = the Sun never sets.'},
+  {q:'Which pair of objects has the STRONGEST gravity between them?', c:['Two objects with large mass, close together','Two objects with small mass, far apart','Two objects with large mass, far apart','Two objects with small mass, close together'],
+   ex:'More mass and less distance both make gravity stronger.'},
+  {q:'Mars is about 1.5 AU from the Sun and Jupiter is about 5.2 AU. Which statement is true?', c:['Jupiter is farther from the Sun than Mars','Mars is farther from the Sun than Jupiter','They are the same distance','Mars is bigger than Jupiter'],
+   ex:'A bigger number of AU = farther away.'},
+  {q:'A planet keeps moving forward because of ____ and curves around the Sun because of ____.', c:['inertia; gravity','gravity; inertia','rotation; revolution','tilt; rotation'], ex:'Inertia keeps it moving; gravity bends the path into an orbit.'},
+  {q:'Which eclipse can only happen at a new moon?', c:['Solar eclipse','Lunar eclipse','Both','Neither'], ex:'The Moon has to be between the Sun and Earth.'},
+  {q:'Which phase comes right after a waxing gibbous?', c:['Full moon','First quarter','Waning gibbous','New moon'], ex:'The lit part keeps growing until it’s full.'},
+  {q:'A classmate says, “It’s summer because Earth is closer to the Sun.” What’s the best reply?', c:['Seasons come from Earth’s tilt. Earth is actually closest to the Sun in January, during northern winter.','You’re right, distance causes the seasons.','Seasons come from the Moon’s phases.','Seasons come from Earth’s rotation.'],
+   ex:'Tilt changes how direct the sunlight is and how long the days are.'},
+  {q:'Why does Venus shine in our night sky?', c:['It reflects sunlight','It makes its own light like a star','It is on fire','It reflects moonlight'], ex:'Planets don’t make light; they reflect the Sun’s.'},
+  {q:'What does the Moon do over about 27 days?', c:['It rotates once AND revolves around Earth once','It only rotates','It only revolves','It revolves around the Sun once'], ex:'That’s why the same side always faces Earth.'},
+  {q:'What was our solar system made from?', c:['A nebula: a spinning cloud of gas and dust pulled together by gravity','A broken-up star','Pieces of Earth','Comets'], ex:'Gravity pulled the nebula together into the Sun and planets.'},
+]},
+];
+
+/*DATA-END*/
+
+// ---------- rendering ----------
+function esc(s){return String(s).replace(/&(?![a-z]+;|#\d+;)/g,'&amp;');}
+function fmt(s){
+  s=esc(s);
+  s=s.replace(/\{\{(.+?)\|\|(.+?)\}\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  s=s.replace(/\{(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  return s;
+}
+function nice(v){ const r=Math.round(v*1000)/1000; return r<0?'−'+Math.abs(r):String(r); }
+function graphSVG(g){
+  const x0=g.x?g.x[0]:-6, x1=g.x?g.x[1]:6, y0=g.y?g.y[0]:-6, y1=g.y?g.y[1]:6;
+  const xs=g.xs||1, ys=g.ys||1, quad1=(x0===0&&y0===0);
+  const xl=g.xl||(quad1?xs:2), yl=g.yl||(quad1?ys:2);
+  const W=320,H=320, pl=quad1?(g.yt?52:36):10, pb=quad1?(g.xt?42:26):10, pr=12, pt=12;
+  const w=W-pl-pr, h=H-pt-pb;
+  const X=x=>pl+(x-x0)/(x1-x0)*w, Y=y=>pt+(y1-y)/(y1-y0)*h;
+  let s=`<svg class="graph" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial" font-size="11">`;
+  s+=`<defs><clipPath id="clp"><rect x="${pl}" y="${pt}" width="${w}" height="${h}"/></clipPath>
+      <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs>`;
+  const eps=1e-9;
+  for(let v=Math.ceil(x0/xs)*xs; v<=x1+eps; v+=xs) s+=`<line x1="${X(v)}" y1="${pt}" x2="${X(v)}" y2="${pt+h}" stroke="#e5e7eb"/>`;
+  for(let v=Math.ceil(y0/ys)*ys; v<=y1+eps; v+=ys) s+=`<line x1="${pl}" y1="${Y(v)}" x2="${pl+w}" y2="${Y(v)}" stroke="#e5e7eb"/>`;
+  // axes
+  s+=`<line x1="${pl}" y1="${Y(Math.max(y0,Math.min(0,y1)))}" x2="${pl+w}" y2="${Y(Math.max(y0,Math.min(0,y1)))}" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="${X(Math.max(x0,Math.min(0,x1)))}" y1="${pt}" x2="${X(Math.max(x0,Math.min(0,x1)))}" y2="${pt+h}" stroke="#374151" stroke-width="1.5"/>`;
+  const ax=Y(Math.max(y0,Math.min(0,y1))), ay=X(Math.max(x0,Math.min(0,x1)));
+  for(let v=Math.ceil(x0/xl)*xl; v<=x1+eps; v+=xl){ if(Math.abs(v)<eps && !quad1) continue;
+    s+=`<text x="${X(v)}" y="${ax+14}" text-anchor="middle" fill="#4b5563">${nice(v)}</text>`; }
+  for(let v=Math.ceil(y0/yl)*yl; v<=y1+eps; v+=yl){ if(Math.abs(v)<eps) continue;
+    s+=`<text x="${ay-5}" y="${Y(v)+4}" text-anchor="end" fill="#4b5563">${nice(v)}</text>`; }
+  if(!quad1){ s+=`<text x="${pl+w-4}" y="${ax-6}" text-anchor="end" font-style="italic" font-size="13">x</text>`;
+              s+=`<text x="${ay+6}" y="${pt+12}" font-style="italic" font-size="13">y</text>`; }
+  if(g.xt) s+=`<text x="${pl+w/2}" y="${H-6}" text-anchor="middle" font-size="12" font-weight="600">${g.xt}</text>`;
+  if(g.yt) s+=`<text x="14" y="${pt+h/2}" text-anchor="middle" font-size="12" font-weight="600" transform="rotate(-90 14 ${pt+h/2})">${g.yt}</text>`;
+  // lines
+  s+=`<g clip-path="url(#clp)">`;
+  (g.lines||[]).forEach(L=>{
+    let [[a,b],[c,d]]=L, p,q;
+    if(a===c){ p=[a,y0]; q=[a,y1]; }
+    else { const m=(d-b)/(c-a), f=x=>b+m*(x-a);
+      p = g.ray? [a,b] : [x0,f(x0)]; q=[x1,f(x1)];
+      // pull endpoints inside the box so the arrowheads are visible
+      const clip=(P,Q)=>{ let [px,py]=P; if(py>y1){px=a+(y1-b)/m;py=y1;} if(py<y0){px=a+(y0-b)/m;py=y0;} return [px,py]; };
+      p = g.ray? p : clip(p,q); q=clip(q,p); }
+    const shrink=0.985, mx=(X(p[0])+X(q[0]))/2, my=(Y(p[1])+Y(q[1]))/2;
+    const sx=v=>mx+(v-mx)*shrink, sy=v=>my+(v-my)*shrink;
+    s+=`<line x1="${sx(X(p[0]))}" y1="${sy(Y(p[1]))}" x2="${sx(X(q[0]))}" y2="${sy(Y(q[1]))}" stroke="#2563eb" stroke-width="2.5"
+        marker-end="url(#arw)" ${g.ray?'':'marker-start="url(#arw)"'}/>`;
+  });
+  s+=`</g>`;
+  (g.pts||[]).forEach(([x,y,lab])=>{
+    s+=`<circle cx="${X(x)}" cy="${Y(y)}" r="4" fill="#111827"/>`;
+    if(lab){ const right = X(x) < pl+w*0.7; s+=`<text x="${X(x)+(right?7:-7)}" y="${Y(y)-7}" text-anchor="${right?'start':'end'}" font-size="12" font-weight="600" fill="#111827" stroke="#fff" stroke-width="3" paint-order="stroke">${lab}</text>`; }
+  });
+  return s+'</svg>';
+}
+function tablesHTML(ts){
+  return '<div class="tables">'+ts.map(t=>'<table class="t">'+(t.cap?`<caption>${t.cap}</caption>`:'')+
+    t.rows.map(r=>'<tr>'+r.map((v,i)=>i===0?`<th>${v}</th>`:`<td>${typeof v==='number'?nice(v):v}</td>`).join('')+'</tr>').join('')+'</table>').join('')+'</div>';
+}
+
+// ---------- answer checking for typed answers ----------
+function parseNum(str){
+  let s=String(str).trim().toLowerCase().replace(/[−–—]/g,'-').replace(/[\s$,]/g,'');
+  if(/^(undefined|undef|und|noslope|none)$/.test(s)) return {u:true};
+  let m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
+  if(m){ const d=parseFloat(m[2]); if(d===0) return {u:true}; return {v:parseFloat(m[1])/d, dec:false}; }
+  if(/^-?\d*\.?\d+$/.test(s)) return {v:parseFloat(s), dec:/\./.test(s)};
+  return null;
+}
+function numCorrect(input, ans){
+  const u=parseNum(input); if(!u) return null;
+  const a=parseNum(ans);
+  if(a.u) return !!u.u;
+  if(u.u) return false;
+  return Math.abs(u.v-a.v) < (u.dec ? 0.006 : 1e-9);
+}
+
+// ---------- app ----------
+const app=document.getElementById('app');
+const best=id=>{ try{return JSON.parse(localStorage.getItem('pt-best-'+id));}catch(e){return null;} };
+const saveBest=(id,sc,tot)=>{ const b=best(id); if(!b || sc/tot > b.s/b.t) localStorage.setItem('pt-best-'+id, JSON.stringify({s:sc,t:tot})); };
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+let S=null; // current run state
+
+function home(){
+  S=null; window.scrollTo(0,0);
+  let h=`<header class="top"><h1>🔭 Science CA#1 Practice</h1><p>Earth-Moon-Sun · Solar System · Vocabulary · Test Fri 11/13</p></header><div class="wrap"><a class="card test" href="../" style="text-decoration:none"><span class="num">📐</span><span class="meta"><div class="title">Math Chapter 4 practice tests</div><div class="sub">Switch to math</div></span><span class="badge">→</span></a>`;
+  TESTS.forEach((t,i)=>{
+    const b=best(t.id); let badge='<span class="badge">New</span>';
+    if(b){ const p=Math.round(100*b.s/b.t); badge=`<span class="badge ${p>=90?'good':p>=70?'mid':''}">Best ${p}%</span>`; }
+    h+=`<button class="card test ${t.star?'star':''}" onclick="start(${i})"><span class="num">${t.star?'⭐':i+1}</span>
+        <span class="meta"><div class="title">${fmt(t.title)}</div><div class="sub">${t.date} · ${t.qs.length} questions</div></span>${badge}</button>`;
+  });
+  h+=`<p class="center muted" style="font-size:14px">Tap an answer to check it right away. Moon pictures show the view from the Northern Hemisphere.</p></div>`;
+  app.innerHTML=h;
+}
+function start(ti, only){
+  const t=TESTS[ti];
+  const idx = only || t.qs.map((_,i)=>i);
+  S={ti, idx, pos:0, results:[], order: idx.map(i=>t.qs[i].c? shuffle(t.qs[i].c.map((_,k)=>k)) : null)};
+  render();
+}
+function render(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], qi=S.idx[S.pos], Q=t.qs[qi], n=S.idx.length;
+  let h=`<div class="wrap"><div class="qhead"><button class="back" onclick="if(confirm('Leave this test? Your progress will be lost.'))home()">← Tests</button>
+    <span>${S.pos+1} / ${n}</span></div><div class="bar"><i style="width:${100*S.pos/n}%"></i></div>
+    <div class="card"><div class="muted" style="font-size:13px">${fmt(t.title)}</div><div class="q">${fmt(Q.q)}</div>`;
+  if(Q.svg) h+=Q.svg;
+  if(Q.g) h+=graphSVG(Q.g);
+  if(Q.t) h+=tablesHTML(Q.t);
+  if(Q.c){
+    S.order[S.pos].forEach(k=>{ h+=`<button class="choice" data-k="${k}" onclick="pick(${k})">${fmt(Q.c[k])}</button>`; });
+  } else {
+    h+=`<div class="numrow"><input id="ans" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Your answer"
+         onkeydown="if(event.key==='Enter')checkNum()"><button class="btn" style="width:auto;margin:0;padding:0 18px" id="chk" onclick="checkNum()">Check</button></div>
+        <div class="keys"><button class="key" onclick="ins('-')">−</button><button class="key" onclick="ins('/')">/</button><button class="key" onclick="ins('.')">.</button>
+        <button class="key" onclick="setAns('undefined')">undefined</button><button class="key" onclick="setAns('')">clear</button></div>
+        <div class="hint">Fractions like −3/2 or decimals like −1.5 both work.</div>`;
+  }
+  h+=`<div id="fb"></div></div></div>`;
+  app.innerHTML=h;
+}
+function ins(ch){ const el=document.getElementById('ans'); el.value+=ch; el.focus(); }
+function setAns(v){ const el=document.getElementById('ans'); el.value=v; el.focus(); }
+function feedback(ok, correctText, ex){
+  const last = S.pos===S.idx.length-1;
+  document.getElementById('fb').innerHTML = `<div class="fb ${ok?'ok':'bad'}"><span class="fbh">${ok?'✅ Correct!':'❌ Not quite. Answer: '+correctText}</span>${fmt(ex||'')}</div>
+    <button class="btn" id="next" onclick="next()">${last?'See my score':'Next →'}</button>`;
+  document.getElementById('next').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function pick(k){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], ok = k===0;
+  document.querySelectorAll('.choice').forEach(b=>{ b.disabled=true; const bk=+b.dataset.k;
+    if(bk===0) b.classList.add('correct'); else if(bk===k) b.classList.add('wrong'); });
+  S.results.push({qi:S.idx[S.pos], ok, given:Q.c[k]});
+  feedback(ok, fmt(Q.c[0]), Q.ex);
+}
+function checkNum(){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
+  const r=numCorrect(el.value, Q.a);
+  if(r===null){ el.style.borderColor='#f59e0b'; el.placeholder='Type a number, like 3/4 or −2'; el.value=''; return; }
+  el.disabled=true; document.getElementById('chk').disabled=true;
+  document.querySelectorAll('.key').forEach(b=>b.disabled=true);
+  S.results.push({qi:S.idx[S.pos], ok:r, given:el.value});
+  feedback(r, fmt(fracShow(Q.a)), Q.ex);
+}
+function next(){ if(S.pos < S.idx.length-1){ S.pos++; render(); } else results(); }
+function results(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], n=S.results.length, sc=S.results.filter(r=>r.ok).length, p=Math.round(100*sc/n);
+  if(S.idx.length===t.qs.length) saveBest(t.id, sc, n);
+  const msg = p===100?'🏆 Perfect!': p>=90?'🌟 Excellent!': p>=75?'👍 Nice work, review the misses below.': p>=50?'💪 Getting there. Retry the ones you missed.':'📚 Review the lesson, then try again.';
+  const missed=S.results.filter(r=>!r.ok).map(r=>r.qi);
+  let h=`<div class="wrap"><div class="card center"><div class="muted">${fmt(t.title)}</div><div class="score">${sc} / ${n}</div>
+    <div style="font-size:20px;font-weight:650">${p}%</div><p>${msg}</p>
+    ${missed.length?`<button class="btn" onclick="start(${S.ti},[${missed}])">Retry the ${missed.length} I missed</button>`:''}
+    <button class="btn ghost" onclick="start(${S.ti})">Retake the whole test</button>
+    <button class="btn ghost" onclick="home()">All tests</button></div>`;
+  if(missed.length){
+    h+=`<div class="card"><b>Review what you missed</b>`;
+    S.results.filter(r=>!r.ok).forEach(r=>{ const Q=t.qs[r.qi];
+      h+=`<div class="rev"><div>${fmt(Q.q)}</div><div class="muted">You said: ${fmt(String(r.given||'(blank)'))}</div>
+          <div><b>Answer:</b> ${Q.c?fmt(Q.c[0]):fmt(fracShow(Q.a))}</div><div class="muted">${fmt(Q.ex||'')}</div></div>`; });
+    h+=`</div>`;
+  }
+  app.innerHTML=h+'</div>';
+}
+home();
+</script>
+</body>
+</html>

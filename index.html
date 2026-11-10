@@ -555,7 +555,7 @@ let S=null; // current run state
 
 function home(){
   S=null; window.scrollTo(0,0);
-  let h=`<header class="top"><h1>📐 Math Practice Tests</h1><p>6 Accel · Chapter 4 · one test for each class lesson</p></header><div class="wrap">`;
+  let h=`<header class="top"><h1>📐 Math Practice Tests</h1><p>6 Accel · Chapter 4 · one test for each class lesson</p></header><div class="wrap"><a class="card test" href="science/" style="text-decoration:none"><span class="num">🔭</span><span class="meta"><div class="title">Science CA#1 practice tests</div><div class="sub">Earth, Moon, Sun &amp; Solar System · Fri 11/13</div></span><span class="badge">→</span></a>`;
   TESTS.forEach((t,i)=>{
     const b=best(t.id); let badge='<span class="badge">New</span>';
     if(b){ const p=Math.round(100*b.s/b.t); badge=`<span class="badge ${p>=90?'good':p>=70?'mid':''}">Best ${p}%</span>`; }
