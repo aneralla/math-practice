@@ -140,6 +140,19 @@ const BCE_TL = timeline([['10,000 BCE','Farming|begins'],['7400 BCE','Çatalhöy
 const HOMINID_TL = timeline([['4 mya','Australo-|pithecus'],['2.4 mya','Homo|habilis'],['1.9 mya','Homo|erectus'],['300,000','Homo|sapiens'],['17,000','Lascaux|cave art']], 'Years ago (mya = million years ago)');
 const OTZI = 'In 1991, two hikers in the Alps mountains, on the border of Austria and Italy, found a body frozen in the ice. Scientists named him Ötzi, or “the Iceman.” He lived about 5,300 years ago. The ice preserved his body, his clothes made of leather and grass, and his tools. Ötzi carried a copper axe, a flint knife, a bow, and arrows. An arrowhead found in his shoulder shows that he was probably shot. Ötzi helps us learn how people lived, dressed, and traveled long ago.';
 
+// Social pyramid: four classes, widest at the bottom.
+function pyramid(){
+  const tiers=[['Kings and rulers','#b45309'],['Priests and nobles','#d97706'],['Merchants and artisans','#f59e0b'],['Farmers and laborers','#fcd34d']];
+  let s=`<svg class="pic" viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial"><rect width="340" height="220" rx="14" fill="#fffbeb"/>`;
+  const top=16, h=48, cx=170, half=y=>48+(y-top)*102/(4*h);
+  tiers.forEach(([lab,col],i)=>{ const y0=top+i*h, y1=y0+h;
+    s+=`<polygon points="${cx-half(y0)},${y0} ${cx+half(y0)},${y0} ${cx+half(y1)},${y1} ${cx-half(y1)},${y1}" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+    s+=`<text x="${cx}" y="${y0+h/2+5}" text-anchor="middle" font-size="12" font-weight="700" fill="#1f2937">${lab}</text>`; });
+  return s+`</svg><div class="cap">An example social pyramid of an early civilization</div>`;
+}
+const NEO_TL = timeline([['10,000 BCE','Farming|begins'],['8000 BCE','Jericho|stone tower'],['7000 BCE','Pottery|made'],['3500 BCE','Wheel|invented'],['3000 BCE','Stonehenge|begun']], 'Farming to Stonehenge (BCE)');
+const CATAL = 'Çatalhöyük was one of the world’s first large farming towns. It was built in what is now Turkey about 9,000 years ago, and thousands of people lived there. Its mud-brick houses were packed so tightly together that there were no streets. Instead, people walked across the rooftops and climbed down ladders through holes in the roofs to get inside. They grew wheat and barley and raised sheep and goats. They painted the walls of their homes and buried their dead under the floors.';
+
 const TESTS = [
 { id:'ss-geo', title:'Geography: Maps & Natural Resources', date:'Geography', qs:[
   {q:'What does a PHYSICAL map show?', c:['Natural features like mountains, rivers, lakes and deserts','Country borders and capital cities','Roads and train lines','Where people vote'],
@@ -247,8 +260,8 @@ const TESTS = [
    ex:'Both are BCE, so subtract: 3500 − 2560 = <b>940 years</b>.'},
   {type:'num', q:'How many years passed between the start of farming (10,000 BCE) and the invention of writing (3200 BCE)?', svg:BCE_TL, a:'6800', calc:'10000-3200',
    ex:'Both BCE → subtract: 10,000 − 3,200 = <b>6,800 years</b>.'},
-  {type:'num', q:'How many years are there from 500 BCE to 500 CE?', a:'1000', calc:'500+500',
-   ex:'When one date is BCE and the other is CE, ADD them: 500 + 500 = <b>1,000 years</b>.'},
+  {type:'num', q:'How many years are there from 500 BCE to 500 CE?', a:'1000', alt:['999'], calc:'500+500',
+   ex:'When one date is BCE and the other is CE, ADD them: 500 + 500 = <b>1,000 years</b>. (999 is also accepted: there was no year 0.)'},
   {q:'What do BCE and CE stand for?', c:['Before Common Era and Common Era','Before Christ Era and Christ Era','Big Change Era and Calm Era','Bronze Copper Era and Copper Era'],
    ex:'BCE dates count down toward year 1; CE dates count up from it.'},
   {q:'Which date is earlier: 4000 BCE or 1500 BCE?', c:['4000 BCE','1500 BCE','They are the same','You can’t tell'], ex:'BCE counts backward, so 4000 BCE is 2,500 years before 1500 BCE.'},
@@ -293,9 +306,57 @@ const TESTS = [
   {q:'In a social pyramid, the LARGEST group is usually…', c:['Farmers and workers at the bottom','Rulers at the top','Priests in the middle','Kings'], ex:'The wide base = the most people.'},
   {q:'Which is a likely reason for cave art?', c:['To tell stories about hunts and share beliefs','To mark farm borders','To advertise products','To write laws'], ex:'Cave art came long before writing.'},
   {type:'num', q:'How many years passed between 8000 BCE and 3000 BCE?', a:'5000', calc:'8000-3000', ex:'Both BCE → subtract: 8,000 − 3,000 = <b>5,000 years</b>.'},
-  {type:'num', q:'How many years passed between 300 BCE and 200 CE?', a:'500', calc:'300+200', ex:'BCE to CE → add: 300 + 200 = <b>500 years</b>.'},
+  {type:'num', q:'How many years passed between 300 BCE and 200 CE?', a:'500', alt:['499'], calc:'300+200', ex:'BCE to CE → add: 300 + 200 = <b>500 years</b>. (499 is also accepted: there was no year 0.)'},
   {q:'Which technology helped early humans cook food and stay warm?', c:['Fire','The wheel','Writing','The plow'], ex:'Homo erectus is believed to be the first to use fire.'},
   {q:'How did early humans most likely first reach North America?', c:['Across the Beringia land bridge from Asia during the Ice Age','By ship from Europe','From Australia by raft','They started there'], ex:'Lower sea levels uncovered land between Siberia and Alaska.'},
+]},
+{ id:'ss-quiz-b', title:'⭐ Social Studies Practice Quiz B (all new)', date:'Extra practice', star:true, qs:[
+  {q:'A map uses colors to show how high the land is and shows rivers and mountain ranges, but no country borders. What kind of map is it?', c:['A physical map','A political map','A road map','A population map'],
+   ex:'Elevation, rivers and mountains are natural features, so it’s a physical map.'},
+  {q:'Which feature would you find on a political map but NOT on a physical map?', c:['The border between two countries','A mountain range','A river','A desert'], ex:'Borders are lines people agreed on. Nature didn’t make them.'},
+  {q:'Which natural resource did early humans use most to make tools?', c:['Stone, like flint','Plastic','Steel','Glass bottles'], ex:'That’s why it’s called the Stone Age: flint chips into sharp edges.'},
+  {q:'Which list shows only natural resources?', c:['Sunlight, wind, fish, clay','Sunlight, bricks, fish, nails','Wind, clay pots, trucks, fish','Clay, coins, paper, oil'],
+   ex:'Clay is natural; a clay pot is made by people from it.'},
+  {q:'Look at the map. In which direction would you travel to go from Tamu to the capital?', svg:islandMap(), c:['East','West','North','South'], ex:'The ★ is to the right of Tamu, and the compass rose shows right = east.'},
+  {q:'On the map, where are the mountains compared with the capital?', svg:islandMap(), c:['North of the capital','South of the capital','East of the capital','West of the capital'], ex:'The mountains are near the top of the map; top = north.'},
+  {q:'Which of these is an ARTIFACT?', c:['A needle carved from bone','A fossilized mammoth tooth','A dinosaur footprint in rock','A fossilized fern leaf'],
+   ex:'Tricky! The needle is made of bone, but a person carved it, so it’s an artifact. The others are fossils.'},
+  {q:'The notes a scientist wrote on the day Lucy’s skeleton was discovered in 1974 are a ___ source about the discovery.', c:['Primary','Secondary','Fossil','Natural'], ex:'They were written by someone who was there, at the time.'},
+  {q:'A children’s book about cave paintings, written in 2020, is a…', c:['Secondary source','Primary source','Artifact from the Stone Age','Fossil'], ex:'The author lived thousands of years after the paintings were made.'},
+  {q:'Lucy, the famous 3.2-million-year-old skeleton, was a member of which group?', c:['Australopithecus','Homo sapiens','Neanderthals','Homo erectus'], ex:'Lucy was an Australopithecus found in Ethiopia.'},
+  {q:'Which hominid’s name means “upright man”?', c:['Homo erectus','Homo habilis','Homo sapiens','Australopithecus'], ex:'Erectus = upright. Habilis = handy. Sapiens = wise.'},
+  {type:'num', q:'Homo habilis appeared about 2,400,000 years ago and Homo sapiens about 300,000 years ago. About how many years apart is that? (Type the number in digits.)', a:'2100000', calc:'2400000-300000',
+   ex:'Both are “years ago,” so subtract: 2,400,000 − 300,000 = <b>2,100,000 years</b>.'},
+  {q:'On which continent did the earliest human ancestors live?', c:['Africa','Europe','Asia','South America'], ex:'The oldest hominid fossils, like Lucy, come from Africa.'},
+  {q:'Why was walking upright on two legs so important for hominids?', c:['It freed their hands to carry things and use tools','It let them fly','It made them taller than trees','It helped them swim faster'], ex:'Free hands → carrying food and babies, making and using tools.'},
+  {q:'Paleolithic people usually lived in…', c:['Small groups (bands or clans) of related families','Large cities with kings','Nations with armies','Farming villages of thousands'], ex:'Small groups could move easily while following food.'},
+  {q:'Which invention helped Paleolithic hunters throw spears farther and harder?', c:['The spear-thrower (atlatl)','The wheel','The plow','The sailboat'], ex:'The atlatl acts like a longer arm, adding speed to the spear.'},
+  {q:'Why did groups of early humans migrate during the Ice Age?', c:['To follow animal herds and find food and better places to live','To find gold','To start farms in Antarctica','Because their kings ordered it'], ex:'Food and climate drove most early migration.'},
+  {q:'Which subjects appear most often in Paleolithic cave paintings?', c:['Large animals, like horses, bison and deer','Farms and crops','Cities and buildings','Ships and the sea'], ex:'They painted the animals that mattered most to their survival.'},
+  {q:'Which of these was an early domesticated farm animal in the Neolithic Age?', c:['Goats','Lions','Elephants','Wolves living in the wild'], ex:'Goats, sheep, pigs and cattle were domesticated by early farmers.'},
+  {q:'What was one problem early farming villages faced?', c:['A bad harvest from drought or flood could cause famine','They had too much free time','There was nothing to trade','Farming needed no work'], ex:'Depending on crops is risky when the weather goes wrong.'},
+  {q:'Why could some people in Neolithic villages become potters, weavers or toolmakers instead of farmers?', c:['Farmers grew a food surplus, so not everyone had to farm','Farming was against the law','There was no food at all','Everyone was a nomad'], ex:'A surplus made specialized jobs possible.'},
+  {q:'How did a food surplus help start trade?', c:['Villages could exchange extra food for goods they didn’t have','People threw extra food away','It made everyone become a nomad','It ended the need for tools'], ex:'Extra grain could be traded for things like obsidian, shells or pottery.'},
+  {q:'Look at the social pyramid. Which group has the MOST people?', svg:pyramid(), c:['Farmers and laborers','Kings and rulers','Priests and nobles','Merchants and artisans'], ex:'The widest part of the pyramid (the bottom) holds the most people.'},
+  {q:'Look at the social pyramid. Which group has the MOST power?', svg:pyramid(), c:['Kings and rulers','Farmers and laborers','Merchants and artisans','Everyone has equal power'], ex:'The narrow top = the fewest people with the most power.'},
+  {q:'Which order is correct, from earliest to latest?', c:['Paleolithic Age → Agricultural Revolution → Neolithic villages → early cities','Neolithic villages → Paleolithic Age → early cities → Agricultural Revolution','Early cities → Neolithic villages → Paleolithic Age → Agricultural Revolution','Agricultural Revolution → Paleolithic Age → early cities → Neolithic villages'],
+   ex:'Hunting and gathering came first, then farming, then villages, then cities.'},
+  {q:'Use the timeline. Which event is the EARLIEST?', svg:NEO_TL, c:['Farming begins (10,000 BCE)','Stonehenge begun (3000 BCE)','Pottery made (7000 BCE)','Wheel invented (3500 BCE)'], ex:'For BCE dates, the biggest number is the longest ago.'},
+  {type:'num', q:'Use the timeline. How many years passed between pottery-making (7000 BCE) and the invention of the wheel (3500 BCE)?', svg:NEO_TL, a:'3500', calc:'7000-3500',
+   ex:'Both BCE → subtract: 7,000 − 3,500 = <b>3,500 years</b>.'},
+  {type:'num', q:'Use the timeline. How many years passed between the start of farming (10,000 BCE) and the start of Stonehenge (3000 BCE)?', svg:NEO_TL, a:'7000', calc:'10000-3000',
+   ex:'Both BCE → subtract: 10,000 − 3,000 = <b>7,000 years</b>.'},
+  {type:'num', q:'About how many years passed from 3000 BCE (when Stonehenge was begun) to 2026 CE?', a:'5026', alt:['5025'], calc:'3000+2026',
+   ex:'BCE to CE → add: 3,000 + 2,026 = <b>5,026 years</b>. (5,025 is also accepted: there was no year 0, so some teachers subtract 1.)'},
+  {q:'Read the passage. What is it mainly about?', p:CATAL, c:['How people lived in Çatalhöyük, an early farming town','How to build ladders','Why Turkey has mountains','How cave paintings were made'], ex:'Every detail describes life in Çatalhöyük.'},
+  {q:'According to the passage, how did people get into their houses?', p:CATAL, c:['Through holes in the roofs, using ladders','Through front doors on wide streets','By swimming','Through tunnels under the town'], ex:'The passage says they climbed down ladders through holes in the roofs, because the houses were packed together with no streets.'},
+  {q:'Which detail from the passage shows that the people of Çatalhöyük were farmers?', p:CATAL, c:['They grew wheat and barley and raised sheep and goats','They painted their walls','They buried their dead under the floors','Their houses were made of mud brick'], ex:'Growing crops and raising animals = farming.'},
+  {type:'open', q:'Explain how the use of fire changed the lives of early humans. Give at least TWO ways.',
+   model:'Fire changed early humans’ lives in many ways. It kept them warm in cold places, so they could survive the Ice Age. It let them cook food, which made it safer and easier to eat. Fire also gave light at night and scared away dangerous animals.',
+   ex:'Checklist: ✔ two or more ways ✔ explain WHY each one mattered.'},
+  {type:'open', q:'Use the pyramid. Describe a social pyramid: who is at the top and the bottom, and why is it shaped like a pyramid?', svg:pyramid(),
+   model:'A social pyramid shows the social classes in a society. A small number of rulers, like kings, are at the top and have the most power. Farmers and laborers are at the bottom, and they are the largest group. It is shaped like a pyramid because there are few people at the top and many people at the bottom.',
+   ex:'Checklist: ✔ name the top and bottom groups ✔ explain the shape (few vs. many). In some civilizations the top is a pharaoh and the bottom is enslaved people. That counts too.'},
 ]},
 ];
 
@@ -450,7 +511,8 @@ function pick(k){
 }
 function checkNum(){
   const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
-  const r=numCorrect(el.value, Q.a);
+  let r=numCorrect(el.value, Q.a);
+  if(r===false && Q.alt) r=Q.alt.some(x=>numCorrect(el.value,x));
   if(r===null){ el.style.borderColor='#f59e0b'; document.getElementById('fb').innerHTML='<div class="hint" style="color:#b45309">Type just a number, like 5000, 3/4 or −2.</div>'; el.focus(); return; }
   el.disabled=true; document.getElementById('chk').disabled=true;
   document.querySelectorAll('.key').forEach(b=>b.disabled=true);
