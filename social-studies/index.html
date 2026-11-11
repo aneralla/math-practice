@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#b45309">
+<title>Social Studies CA#1: Practice Tests</title>
+<style>
+  :root { --ink:#1f2937; --muted:#6b7280; --bg:#f5f5fb; --card:#fff; --brand:#b45309; --brand2:#d97706;
+          --ok:#15803d; --okbg:#dcfce7; --bad:#b91c1c; --badbg:#fee2e2; --line:#e5e7eb; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; background:var(--bg); color:var(--ink);
+    font:17px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .wrap { max-width:560px; margin:0 auto; padding:16px 14px calc(28px + env(safe-area-inset-bottom)); }
+  header.top { background:linear-gradient(135deg,var(--brand),var(--brand2)); color:#fff; padding:22px 16px 18px;
+    border-radius:0 0 22px 22px; padding-top:calc(22px + env(safe-area-inset-top)); }
+  header.top h1 { margin:0 0 4px; font-size:24px; }
+  header.top p { margin:0; opacity:.9; font-size:15px; }
+  .card { background:var(--card); border-radius:16px; padding:16px; margin:12px 0; box-shadow:0 1px 3px rgba(0,0,0,.07); }
+  .test { display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; cursor:pointer; color:inherit; font:inherit; }
+  .test .num { flex:0 0 38px; height:38px; border-radius:12px; background:#fef3c7; color:var(--brand); font-weight:700;
+    display:flex; align-items:center; justify-content:center; }
+  .test .meta { flex:1; min-width:0; }
+  .test .title { font-weight:650; }
+  .test .sub { color:var(--muted); font-size:14px; }
+  .badge { font-size:13px; font-weight:700; padding:3px 8px; border-radius:999px; background:#f3f4f6; color:var(--muted); white-space:nowrap; }
+  .badge.good { background:var(--okbg); color:var(--ok); }
+  .badge.mid { background:#fef9c3; color:#854d0e; }
+  .star { background:#fff7ed; border:2px solid #fdba74; }
+  .bar { height:8px; background:#e5e7eb; border-radius:99px; overflow:hidden; margin:6px 0 2px; }
+  .bar > i { display:block; height:100%; background:var(--brand2); transition:width .3s; }
+  .qhead { display:flex; justify-content:space-between; align-items:center; font-size:14px; color:var(--muted); }
+  .back { border:0; background:none; color:var(--brand); font:inherit; font-size:15px; padding:6px 0; cursor:pointer; }
+  .q { font-size:19px; font-weight:560; margin:6px 0 12px; }
+  .choice { display:block; width:100%; text-align:left; font:inherit; color:inherit; background:#fff; border:2px solid var(--line);
+    border-radius:14px; padding:13px 14px; margin:9px 0; cursor:pointer; min-height:52px; }
+  .choice:active { transform:scale(.99); }
+  .choice.correct { border-color:var(--ok); background:var(--okbg); }
+  .choice.wrong { border-color:var(--bad); background:var(--badbg); }
+  .choice[disabled] { cursor:default; }
+  .numrow { display:flex; gap:8px; }
+  .numrow input { flex:1; font:inherit; font-size:20px; padding:12px; border:2px solid var(--line); border-radius:12px; min-width:0; }
+  .numrow input:focus { outline:none; border-color:var(--brand2); }
+  .keys { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .key { font:inherit; border:1px solid var(--line); background:#f9fafb; border-radius:10px; padding:8px 14px; cursor:pointer; }
+  .btn { display:block; width:100%; font:inherit; font-weight:650; border:0; border-radius:14px; padding:14px; margin-top:12px;
+    background:var(--brand); color:#fff; cursor:pointer; }
+  .btn.ghost { background:#eef2ff; color:var(--brand); }
+  .fb { border-radius:14px; padding:12px 14px; margin-top:12px; }
+  .fb.ok { background:var(--okbg); }
+  .fb.bad { background:var(--badbg); }
+  .fb .fbh { display:block; margin-bottom:4px; font-weight:700; }
+  .hint { color:var(--muted); font-size:14px; margin-top:6px; }
+  .fr { display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.85em; margin:0 2px; line-height:1.1; }
+  .fr > span:first-child { border-bottom:1.5px solid currentColor; padding:0 2px; }
+  .fr > span:last-child { padding:0 2px; }
+  svg.pic { display:block; width:100%; max-width:340px; height:auto; margin:4px auto 2px; }
+  svg.pic[width="170"] { max-width:170px; }
+  .passage { background:#fffbeb; border-left:4px solid #d97706; padding:10px 12px; border-radius:8px; margin:6px 0 12px; font-size:16px; }
+  textarea.open { width:100%; min-height:130px; font:inherit; font-size:16px; padding:10px; border:2px solid var(--line); border-radius:12px; }
+  .model { background:#eef2ff; border-radius:12px; padding:10px 12px; margin-top:10px; }
+  table.t td, table.t th { font-size:12px; padding:4px 5px; }
+  .tables { max-width:100%; overflow-x:auto; }
+  table.t { width:100%; }
+  .cap { text-align:center; font-size:12px; color:var(--muted); margin-bottom:10px; }
+  svg.graph { display:block; width:100%; max-width:340px; margin:4px auto 10px; background:#fff; }
+  table.t { border-collapse:collapse; margin:6px auto 12px; font-size:16px; }
+  table.t caption { font-weight:650; font-size:14px; color:var(--muted); padding-bottom:4px; }
+  table.t td, table.t th { border:1.5px solid #9ca3af; padding:6px 10px; text-align:center; }
+  table.t th { background:#eef2ff; }
+  .tables { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .score { font-size:44px; font-weight:800; text-align:center; margin:6px 0 0; }
+  .center { text-align:center; }
+  .rev { border-top:1px solid var(--line); padding:10px 0; font-size:15px; }
+  .rev:first-child { border-top:0; }
+  .muted { color:var(--muted); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/*DATA-START*/
+// ---------- picture helpers ----------
+// Timeline: events placed evenly left (earliest) to right (most recent).
+function timeline(evts, title){
+  const W=340, n=evts.length, x0=44, x1=W-44, step=(x1-x0)/(n-1);
+  let s=`<svg class="pic" viewBox="0 0 ${W} 200" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial"><rect width="${W}" height="200" rx="14" fill="#fffbeb" stroke="#fcd34d"/>`;
+  s+=`<text x="${W/2}" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">${title}</text>`;
+  s+=`<line x1="12" y1="105" x2="${W-12}" y2="105" stroke="#78350f" stroke-width="3"/>`;
+  evts.forEach(([when,what],i)=>{ const x=x0+i*step, up=i%2===0, y=up?58:150;
+    s+=`<circle cx="${x}" cy="105" r="5" fill="#b45309"/><line x1="${x}" y1="${up?72:110}" x2="${x}" y2="${up?100:138}" stroke="#b45309"/>`;
+    s+=`<text x="${x}" y="${up?y-16:y}" text-anchor="middle" font-size="11" font-weight="700" fill="#111">${when}</text>`;
+    what.split('|').forEach((w,k)=>{ s+=`<text x="${x}" y="${(up?y-16:y)+13+k*12}" text-anchor="middle" font-size="10" fill="#374151">${w}</text>`; });
+  });
+  return s+`</svg><div class="cap">Spacing is not to scale</div>`;
+}
+// Simple map of an imaginary island, with a title, compass rose, key and scale.
+function islandMap(){
+  let s=`<svg class="pic" viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial"><rect width="340" height="260" rx="14" fill="#bfdbfe"/>`;
+  s+=`<text x="12" y="22" font-size="13" font-weight="700" fill="#1e3a8a">Island of Kora</text>`;
+  s+=`<path d="M40,60 C80,30 190,30 230,55 C260,75 250,130 235,170 C215,215 120,235 70,205 C30,180 20,100 40,60 Z" fill="#d9f99d" stroke="#65a30d" stroke-width="2"/>`;
+  for(const [x,y] of [[95,70],[120,62],[145,72]]) s+=`<polygon points="${x-12},${y+14} ${x},${y-8} ${x+12},${y+14}" fill="#a16207"/>`; // mountains (north)
+  s+=`<path d="M120,80 C125,110 110,140 130,170 C140,190 150,205 160,224" fill="none" stroke="#2563eb" stroke-width="3"/>`; // river flows south to the sea
+  for(const [x,y] of [[200,110],[212,124],[195,132],[214,98]]) s+=`<circle cx="${x}" cy="${y}" r="7" fill="#15803d"/>`; // forest (east)
+  s+=`<text x="132" y="180" font-size="18" text-anchor="middle" fill="#b91c1c">★</text>`; // capital at (132,174)
+  s+=`<circle cx="72" cy="174" r="5" fill="#111"/><text x="72" y="192" font-size="10" text-anchor="middle">Tamu</text>`; // village due west of capital
+  // compass rose
+  s+=`<g transform="translate(300,48)"><polygon points="0,-22 5,0 0,22 -5,0" fill="#1f2937"/><polygon points="-22,0 0,-5 22,0 0,5" fill="#6b7280"/>`+
+     `<text y="-26" text-anchor="middle" font-size="11" font-weight="700">N</text><text y="36" text-anchor="middle" font-size="11" font-weight="700">S</text>`+
+     `<text x="-32" y="4" text-anchor="middle" font-size="11" font-weight="700">W</text><text x="32" y="4" text-anchor="middle" font-size="11" font-weight="700">E</text></g>`;
+  // key
+  s+=`<g transform="translate(250,150)" font-size="10"><rect x="-6" y="-14" width="90" height="92" fill="#fff" stroke="#9ca3af" rx="4"/><text x="0" y="0" font-weight="700">KEY</text>`+
+     `<polygon points="0,16 6,6 12,16" fill="#a16207"/><text x="18" y="16">Mountains</text>`+
+     `<line x1="0" y1="28" x2="12" y2="28" stroke="#2563eb" stroke-width="3"/><text x="18" y="31">River</text>`+
+     `<circle cx="6" cy="42" r="5" fill="#15803d"/><text x="18" y="46">Forest</text>`+
+     `<text x="6" y="62" fill="#b91c1c" font-size="13" text-anchor="middle">★</text><text x="18" y="60">Capital</text>`+
+     `<circle cx="6" cy="72" r="3" fill="#111"/><text x="18" y="75">Village</text></g>`;
+  // scale: 30 px = 10 miles; Tamu to capital = 60 px = 20 miles
+  s+=`<g transform="translate(16,236)" font-size="10"><line x1="0" y1="0" x2="30" y2="0" stroke="#111" stroke-width="3"/><line x1="0" y1="-4" x2="0" y2="4" stroke="#111"/><line x1="30" y1="-4" x2="30" y2="4" stroke="#111"/>`+
+     `<text x="0" y="14">0</text><text x="24" y="14">10 miles</text></g>`;
+  return s+`</svg>`;
+}
+const HOMINID_CHART = [{cap:'Early Hominids', rows:[
+  ['Hominid','Name means','First appeared','Known for'],
+  ['Australopithecus','“southern ape”','about 4 million years ago','walking upright (Lucy)'],
+  ['Homo habilis','“handy man”','about 2.4 million years ago','first stone tools'],
+  ['Homo erectus','“upright man”','about 1.9 million years ago','using fire; first to leave Africa'],
+  ['Neanderthals','(Neander Valley, Germany)','about 400,000 years ago','burying the dead; living in cold Europe and Asia'],
+  ['Homo sapiens','“wise man”','about 300,000 years ago (some books say 200,000)','language, cave art, spreading around the world'],
+]}];
+const AGES_CHART = [{cap:'Two Stone Ages', rows:[
+  ['','Paleolithic (Old Stone Age)','Neolithic (New Stone Age)'],
+  ['Food','hunting and gathering','farming and herding'],
+  ['Homes','moved often (nomads); caves, tents','permanent villages'],
+  ['Tools','chipped stone tools, fire','polished stone tools, pottery, weaving'],
+  ['Jobs','everyone helps find food','specialized jobs'],
+]}];
+const BCE_TL = timeline([['10,000 BCE','Farming|begins'],['7400 BCE','Çatalhöyük|village'],['3500 BCE','Wheel|invented'],['3200 BCE','Writing|invented'],['2560 BCE','Great|Pyramid']], 'From Farming to Pyramids (BCE)');
+const HOMINID_TL = timeline([['4 mya','Australo-|pithecus'],['2.4 mya','Homo|habilis'],['1.9 mya','Homo|erectus'],['300,000','Homo|sapiens'],['17,000','Lascaux|cave art']], 'Years ago (mya = million years ago)');
+const OTZI = 'In 1991, two hikers in the Alps mountains, on the border of Austria and Italy, found a body frozen in the ice. Scientists named him Ötzi, or “the Iceman.” He lived about 5,300 years ago. The ice preserved his body, his clothes made of leather and grass, and his tools. Ötzi carried a copper axe, a flint knife, a bow, and arrows. An arrowhead found in his shoulder shows that he was probably shot. Ötzi helps us learn how people lived, dressed, and traveled long ago.';
+
+const TESTS = [
+{ id:'ss-geo', title:'Geography: Maps & Natural Resources', date:'Geography', qs:[
+  {q:'What does a PHYSICAL map show?', c:['Natural features like mountains, rivers, lakes and deserts','Country borders and capital cities','Roads and train lines','Where people vote'],
+   ex:'Physical = what nature made (landforms, bodies of water, elevation).'},
+  {q:'What does a POLITICAL map show?', c:['Borders, countries, states and cities made by people','Mountains and rivers only','The height of the land','Where rain falls'],
+   ex:'Political = lines and places people created: borders, countries, capitals, cities.'},
+  {q:'You want to find which countries border Egypt. Which map should you use?', c:['A political map','A physical map','A climate map','A star map'], ex:'Borders between countries are on political maps.'},
+  {q:'You want to find the tallest mountains in Africa. Which map should you use?', c:['A physical map','A political map','A road map','A population map'], ex:'Mountains are natural features, so use a physical map.'},
+  {q:'Which of these is a natural resource?', c:['Fresh water','Plastic bottles','Cell phones','Cars'], ex:'Natural resources come from nature and are used by people. The others are made in factories.'},
+  {q:'Which of these is NOT a natural resource?', c:['A brick house','Trees','Soil','Oil'], ex:'Bricks and houses are made by people (from natural resources like clay).'},
+  {q:'Which list contains only natural resources?', c:['Water, soil, trees, minerals','Water, computers, trees, glass jars','Soil, bicycles, oil, paper money','Wood furniture, steel, coins, tires'],
+   ex:'All four come straight from nature.'},
+  {q:'Why did early people often settle near rivers?', c:['Rivers gave fresh water, fish, and rich soil for farming','Rivers protected them from all enemies','Rivers had no animals','Rivers were the only place to find stone'],
+   ex:'Water is one of the most important natural resources.'},
+  {q:'Look at the map. What does the ★ stand for?', svg:islandMap(), c:['The capital','A village','A mountain','A forest'], ex:'Check the map key (legend): ★ = capital.'},
+  {q:'On the map, in which direction does the river flow from the mountains to the sea?', svg:islandMap(), c:['South','North','East','West'], ex:'The mountains are in the north and the river runs down to the sea at the bottom of the map. Use the compass rose: the bottom is south.'},
+  {type:'num', q:'Use the map scale. About how many miles is it from the village of Tamu to the capital?', svg:islandMap(), a:'20', calc:'60/30*10',
+   ex:'Tamu to the ★ is two scale bars long, and each bar is 10 miles: 2 × 10 = <b>20 miles</b>.'},
+  {q:'On the map, which part of Kora is covered by forest?', svg:islandMap(), c:['The east','The west','The south','The north'], ex:'The green forest circles are on the right side of the island; the compass says right = east.'},
+  {q:'What is the map part that explains what the symbols mean?', c:['The key (legend)','The compass rose','The scale','The title'], ex:'Compass rose = directions; scale = distance; key = symbols.'},
+]},
+
+{ id:'ss-sources', title:'Studying the Past: Artifacts, Fossils & Sources', date:'Early Humans', qs:[
+  {q:'What is an artifact?', c:['An object made or used by people, like a tool, pot or piece of jewelry','The preserved remains of a plant or animal','A book written by a historian','A type of rock'],
+   ex:'If people made it or used it, it’s an artifact.'},
+  {q:'What is a fossil?', c:['The preserved remains or traces of a living thing, like bones, teeth or footprints in rock','A tool made by early humans','A cave painting','A written record'],
+   ex:'Fossils come from living things; artifacts come from human hands.'},
+  {q:'Scientists dig up a stone spear point. Is it an artifact or a fossil?', c:['An artifact, because people made it','A fossil, because it is old','A fossil, because it is made of stone','Neither'], ex:'Being old doesn’t make something a fossil. A person shaped it, so it’s an artifact.'},
+  {q:'Scientists find a 3-million-year-old skull. Is it an artifact or a fossil?', c:['A fossil','An artifact','A primary source written by the hominid','A secondary source'], ex:'Bones are the remains of a living thing, so they’re fossils.'},
+  {q:'Footprints left in hardened volcanic ash millions of years ago are…', c:['Fossils (traces of living things)','Artifacts','Secondary sources','Natural resources'], ex:'The Laetoli footprints in Tanzania are about 3.6 million years old: trace fossils.'},
+  {q:'A scientist who studies the past by digging up and examining artifacts is called…', c:['An archaeologist','A geographer','A meteorologist','An astronaut'], ex:'Archaeologists study artifacts to learn how people lived.'},
+  {q:'What is a primary source?', c:['Something made by a person who was there at the time','A source written later by someone who studied the event','Any book in a library','A source that is always correct'],
+   ex:'Primary = first-hand, made at the time (diaries, photos, letters, artifacts, cave paintings).'},
+  {q:'What is a secondary source?', c:['Something made later by someone who was NOT there, using other sources','A diary written during an event','A photograph taken at the event','An artifact'],
+   ex:'Secondary = second-hand: textbooks, encyclopedias, biographies, documentaries.'},
+  {q:'Which is a PRIMARY source about early humans?', c:['A cave painting made 17,000 years ago','Your social studies textbook','A website about the Stone Age','A documentary about cave art'], ex:'The painting was made by people who lived then.'},
+  {q:'Which is a SECONDARY source?', c:['An encyclopedia article about the Neolithic Age','A clay pot made in a Neolithic village','A stone hand axe','A letter written by a soldier during a war'], ex:'The encyclopedia was written long afterward by people who studied the period.'},
+  {q:'Why are artifacts important to historians studying early humans?', c:['Early humans had no writing, so objects are the main clues to how they lived','Artifacts tell exactly what people were thinking','Artifacts are always made of gold','They aren’t important'],
+   ex:'Before writing (prehistory), objects and fossils are almost all the evidence we have.'},
+]},
+
+{ id:'ss-hominids', title:'Human Origins & Types of Hominids', date:'Early Humans', qs:[
+  {q:'Where have scientists found the oldest fossils of human ancestors?', c:['East Africa','Europe','North America','Australia'],
+   ex:'Many of the oldest hominid fossils, including Lucy, come from East Africa: Ethiopia, Kenya and Tanzania (around the Great Rift Valley).'},
+  {q:'“Lucy,” a famous 3.2-million-year-old skeleton, was found in which country?', c:['Ethiopia','France','China','Mexico'], ex:'Lucy (an Australopithecus) was found in Ethiopia, East Africa, in 1974.'},
+  {q:'What is a hominid?', c:['A human or an early ancestor of humans that walked upright','Any kind of ape','A type of dinosaur','A stone tool'], ex:'Your class uses “hominid” for humans and our upright-walking ancestors.'},
+  {q:'Use the chart. Which hominid is known for making the first stone tools?', t:HOMINID_CHART, c:['Homo habilis','Australopithecus','Homo erectus','Neanderthals'], ex:'Homo habilis means “handy man” because of its tools.'},
+  {q:'Use the chart. Which hominid was the first to use fire and to leave Africa?', t:HOMINID_CHART, c:['Homo erectus','Homo habilis','Australopithecus','Homo sapiens'], ex:'Homo erectus means “upright man.”'},
+  {q:'Use the chart. Which is the OLDEST type of hominid?', t:HOMINID_CHART, c:['Australopithecus','Homo sapiens','Neanderthals','Homo erectus'], ex:'About 4 million years ago is the biggest number of years ago, so it’s the earliest.'},
+  {q:'What does “Homo sapiens” mean?', c:['Wise man','Handy man','Upright man','Southern ape'], ex:'That’s us: modern humans.'},
+  {q:'Why are Homo sapiens so important?', c:['They are modern humans: they developed complex language, art and better tools, and spread around the world','They were the first to walk upright','They were the first hominids','They lived only in Europe'],
+   ex:'Homo sapiens are the only hominids still alive today.'},
+  {q:'Which hominid lived in cold Europe and Asia and buried its dead?', c:['Neanderthals','Australopithecus','Homo habilis','None of them did'], ex:'Neanderthals lived in Ice Age Europe and Asia.'},
+  {q:'Which order goes from OLDEST to NEWEST?', c:['Australopithecus → Homo habilis → Homo erectus → Homo sapiens','Homo sapiens → Homo erectus → Homo habilis → Australopithecus','Homo habilis → Australopithecus → Homo sapiens → Homo erectus','Homo erectus → Australopithecus → Homo sapiens → Homo habilis'],
+   ex:'4 million → 2.4 million → 1.9 million → 300,000 years ago.'},
+  {q:'Use the timeline. Which event is the MOST RECENT?', svg:HOMINID_TL, c:['Lascaux cave art','Homo sapiens appear','Homo erectus appears','Australopithecus appears'], ex:'17,000 years ago is the smallest number of years ago, so it’s the closest to today.'},
+  {q:'Use the timeline. How many years passed between Homo habilis (2.4 mya) and Homo erectus (1.9 mya)?', svg:HOMINID_TL, c:['500,000 years','4.3 million years','1.9 million years','50,000 years'],
+   ex:'2.4 million − 1.9 million = 0.5 million = 500,000 years.'},
+]},
+
+{ id:'ss-paleo', title:'Paleolithic Life: Tools, Cave Art & Migration', date:'Early Humans', qs:[
+  {q:'“Paleolithic” means…', c:['Old Stone Age','New Stone Age','Bronze Age','Ice Age'], ex:'Paleo = old, lithic = stone.'},
+  {q:'How did Paleolithic people get their food?', c:['Hunting animals and gathering wild plants','Farming crops','Buying it at markets','Raising cattle in villages'], ex:'They were hunter-gatherers.'},
+  {q:'What is a nomad?', c:['A person who moves from place to place instead of living in one spot','A farmer who stays in one village','A ruler of a city','A cave painter'], ex:'Paleolithic people were nomads because they followed herds and food.'},
+  {q:'Why were Paleolithic people nomads?', c:['They followed the animals they hunted and the plants that grew in different seasons','They didn’t like their neighbors','They were looking for gold','Their villages kept flooding'], ex:'When food moved or ran out, they moved.'},
+  {q:'What is migration?', c:['Moving from one region to another to live','Planting seeds','Making cave art','Trading goods'], ex:'Early humans migrated out of Africa and eventually reached every continent except Antarctica.'},
+  {q:'During the Ice Age, how did early humans probably reach the Americas from Asia?', c:['By walking across a land bridge (Beringia) that connected Asia and North America','By sailing large ships across the Atlantic','By flying','By swimming across the Pacific'],
+   ex:'Sea levels were lower during the Ice Age, uncovering land between Siberia and Alaska.'},
+  {q:'Why was fire such an important technology?', c:['It gave warmth, light, protection from animals, and a way to cook food','It was used to send emails','It made people stop needing food','It made stone tools unnecessary'], ex:'Cooking also made food safer and easier to eat.'},
+  {q:'Which was an early human technology from the Paleolithic Age?', c:['Stone hand axes and spears','Metal swords','Plows pulled by oxen','Written alphabets'], ex:'Paleolithic tools were made of stone, bone and wood.'},
+  {q:'How did early humans survive the cold of the Ice Age?', c:['They made clothing from animal skins, used fire, and lived in shelters','They moved to Antarctica','They built brick houses with heaters','They stopped hunting'],
+   ex:'Bone needles let them sew skins into warm clothes.'},
+  {q:'Which is a likely reason early humans made cave art?', c:['To record or tell stories about hunts and to share beliefs','To sell paintings to tourists','To mark property lines for farms','To write laws'],
+   ex:'Historians think cave art recorded hunts, taught others, and may have had spiritual meaning, like hoping for a good hunt.'},
+  {q:'The famous horse paintings of Lascaux, like the one on your study guide, are in a cave in…', c:['France','Egypt','Japan','Brazil'], ex:'The Lascaux paintings in France are about 17,000 years old.'},
+  {q:'What did early humans use to make paint for cave art?', c:['Natural materials like charcoal, minerals and colored clay (ochre)','Store-bought markers','Oil paint from tubes','Melted plastic'], ex:'They also blew paint through hollow bones to make hand stencils.'},
+]},
+
+{ id:'ss-neo', title:'Neolithic Age & the Agricultural Revolution', date:'Early Humans', qs:[
+  {q:'“Neolithic” means…', c:['New Stone Age','Old Stone Age','Middle Ages','Age of Metals'], ex:'Neo = new, lithic = stone.'},
+  {q:'What was the Agricultural Revolution?', c:['The change from hunting and gathering to farming and raising animals','A war between farmers and hunters','The invention of tractors','The start of cave art'],
+   ex:'It began about 12,000 years ago (around 10,000 BCE) and changed how people lived.'},
+  {q:'Where did farming first begin?', c:['The Fertile Crescent in Southwest Asia (the Middle East)','Antarctica','North America','Australia'], ex:'Farming also started on its own in other places later, like China and the Americas.'},
+  {q:'What does it mean to domesticate a plant or animal?', c:['To tame it or grow it for human use','To hunt it until it disappears','To paint it on a cave wall','To trade it to other villages'], ex:'Wheat, barley, goats, sheep and cattle were early domesticated plants and animals.'},
+  {q:'How did farming change where people lived?', c:['People settled in permanent villages near their fields','People moved more often','People moved back into caves','Nothing changed'], ex:'You can’t leave your crops behind, so nomads became settlers.'},
+  {q:'Use the chart. How were Neolithic tools different from Paleolithic tools?', t:AGES_CHART, c:['They were polished, and people also made pottery and wove cloth','They were made of plastic','They were only chipped stone','There were no tools in the Neolithic Age'],
+   ex:'Read across the “Tools” row of the chart.'},
+  {q:'What is a food surplus?', c:['More food than people need right away','Not enough food','Food that has gone bad','Food from hunting only'], ex:'Farming could produce extra food that could be stored.'},
+  {q:'How did a food surplus lead to specialized jobs?', c:['Not everyone had to farm, so some people could become potters, weavers, toolmakers or traders','Everyone had to hunt more','People stopped working','It made everyone a farmer'],
+   ex:'Specialized jobs = people doing one kind of work they become skilled at.'},
+  {q:'Which of these is a specialized job that appeared in Neolithic villages?', c:['Potter','Hunter-gatherer','Nomad','Astronaut'], ex:'Potters, weavers, builders and priests became possible because farmers grew extra food.'},
+  {q:'What is a social class?', c:['A group of people with similar wealth, jobs or status in a society','A class at school','A type of farm','A group of nomads'], ex:'As villages grew into cities, people were divided into classes.'},
+  {q:'In a social pyramid, who is usually at the TOP?', c:['A small number of rulers and powerful leaders','The largest group, the farmers','Enslaved people','Children'], ex:'The top has the most power and the fewest people.'},
+  {q:'Why is a social pyramid shaped like a pyramid?', c:['There are few people at the top with lots of power and many people at the bottom with little power','Because the Egyptians built pyramids','Because everyone is equal','Because farmers were at the top'],
+   ex:'Wide bottom = most people (farmers, workers, enslaved people). Narrow top = rulers.'},
+  {q:'Çatalhöyük, in modern-day Turkey, is famous as…', c:['One of the earliest known Neolithic farming villages','A Paleolithic cave with paintings','The place where Lucy was found','The first pyramid'], ex:'Thousands of people lived there around 7400 BCE.'},
+]},
+
+{ id:'ss-skills', title:'Skills: Timelines, Charts & Reading', date:'Skills', qs:[
+  {q:'Use the timeline. Which event is the EARLIEST?', svg:BCE_TL, c:['Farming begins (10,000 BCE)','Great Pyramid (2560 BCE)','Wheel invented (3500 BCE)','Writing invented (3200 BCE)'],
+   ex:'With BCE dates, the BIGGER number is longer ago. 10,000 BCE is the earliest.'},
+  {q:'Use the timeline. Which event is the MOST RECENT?', svg:BCE_TL, c:['Great Pyramid (2560 BCE)','Farming begins (10,000 BCE)','Çatalhöyük village (7400 BCE)','Wheel invented (3500 BCE)'],
+   ex:'The SMALLEST BCE number is closest to today.'},
+  {type:'num', q:'Use the timeline. How many years passed between the invention of the wheel (3500 BCE) and the Great Pyramid (2560 BCE)?', svg:BCE_TL, a:'940', calc:'3500-2560',
+   ex:'Both are BCE, so subtract: 3500 − 2560 = <b>940 years</b>.'},
+  {type:'num', q:'How many years passed between the start of farming (10,000 BCE) and the invention of writing (3200 BCE)?', svg:BCE_TL, a:'6800', calc:'10000-3200',
+   ex:'Both BCE → subtract: 10,000 − 3,200 = <b>6,800 years</b>.'},
+  {type:'num', q:'How many years are there from 500 BCE to 500 CE?', a:'1000', calc:'500+500',
+   ex:'When one date is BCE and the other is CE, ADD them: 500 + 500 = <b>1,000 years</b>.'},
+  {q:'What do BCE and CE stand for?', c:['Before Common Era and Common Era','Before Christ Era and Christ Era','Big Change Era and Calm Era','Bronze Copper Era and Copper Era'],
+   ex:'BCE dates count down toward year 1; CE dates count up from it.'},
+  {q:'Which date is earlier: 4000 BCE or 1500 BCE?', c:['4000 BCE','1500 BCE','They are the same','You can’t tell'], ex:'BCE counts backward, so 4000 BCE is 2,500 years before 1500 BCE.'},
+  {q:'Use the chart. Which kind of food did Neolithic people get that Paleolithic people did not?', t:AGES_CHART, c:['Crops they farmed and animals they herded','Wild berries','Animals they hunted','Fish they caught'], ex:'Read the “Food” row.'},
+  {q:'Read the passage. What is the main idea?', p:OTZI, c:['Ötzi’s frozen body and belongings help us learn how people lived long ago','Hikers should be careful in the Alps','Copper axes are better than stone axes','Austria and Italy argued over a border'],
+   ex:'The last sentence states the main idea; the other sentences give details.'},
+  {q:'In the passage, which item is an ARTIFACT?', p:OTZI, c:['Ötzi’s copper axe','The ice','Ötzi’s bones','The Alps mountains'], ex:'People made the axe. Bones are remains of a living thing, not artifacts.'},
+  {q:'According to the passage, how do scientists know Ötzi was probably shot?', p:OTZI, c:['An arrowhead was found in his shoulder','He was carrying a bow','He was found in the ice','He had a flint knife'],
+   ex:'Use evidence straight from the text: “An arrowhead found in his shoulder shows that he was probably shot.”'},
+  {q:'Ötzi lived about 5,300 years ago. About what year was that?', p:OTZI, c:['About 3300 BCE','About 5300 CE','About 1991 CE','About 10,000 BCE'], ex:'About 5,300 − 2,000 years ≈ 3300 BCE.'},
+]},
+
+{ id:'ss-open', title:'Open-Ended Response Practice', date:'Skills', qs:[
+  {type:'open', q:'Explain TWO differences between life in the Paleolithic Age and life in the Neolithic Age.',
+   model:'In the Paleolithic Age, people were nomads who hunted and gathered their food, but in the Neolithic Age people farmed and raised animals. Also, Paleolithic people moved often and lived in caves or temporary shelters, while Neolithic people built permanent villages.',
+   ex:'Checklist: ✔ restate the question ✔ give TWO clear differences ✔ use words like “but,” “while,” or “however” to compare.'},
+  {type:'open', q:'How did the Agricultural Revolution lead to specialized jobs? Explain.',
+   model:'When people learned to farm, they could grow more food than they needed, called a surplus. Because not everyone had to farm anymore, some people could spend their time on other jobs, like making pottery, weaving cloth, or trading. These are called specialized jobs.',
+   ex:'Checklist: ✔ mention farming ✔ explain food surplus ✔ give at least one example job.'},
+  {type:'open', q:'Why do historians think early humans created cave art? Give TWO reasons.',
+   model:'Historians think early humans made cave art to record important events, like hunts, and to teach or tell stories to others. Some also think the paintings had a spiritual meaning, such as hoping for a successful hunt.',
+   ex:'Checklist: ✔ two reasons ✔ an example (like the Lascaux horses) makes it stronger.'},
+  {type:'open', q:'Explain the difference between an artifact and a fossil. Give an example of each.',
+   model:'An artifact is an object made or used by people, such as a stone tool or a clay pot. A fossil is the preserved remains or trace of a living thing, such as a skull or a footprint in rock.',
+   ex:'Checklist: ✔ define both ✔ one example of each.'},
+  {type:'open', q:'Why are Homo sapiens considered so important in the story of early humans?',
+   model:'Homo sapiens are modern humans. They developed complex language, made better tools and art like cave paintings, and migrated out of Africa all around the world. They are the only hominids still alive today.',
+   ex:'Checklist: ✔ say they are modern humans ✔ give at least two achievements.'},
+]},
+
+{ id:'ss-review', title:'⭐ Social Studies CA#1 Mixed Review', date:'All topics', star:true, qs:[
+  {q:'A map that shows mountains, rivers and deserts is a…', c:['Physical map','Political map','Road map','Population map'], ex:'Physical = natural features.'},
+  {q:'Which is a natural resource?', c:['Timber (wood from trees)','A plastic toy','A skyscraper','A car tire'], ex:'It comes from nature.'},
+  {q:'A clay pot from a Neolithic village is…', c:['An artifact and a primary source','A fossil and a secondary source','A fossil and a primary source','An artifact and a secondary source'],
+   ex:'People made it (artifact) at the time (primary source).'},
+  {q:'Your textbook chapter on early humans is a…', c:['Secondary source','Primary source','Fossil','Artifact from the Stone Age'], ex:'Written long after, by people who weren’t there.'},
+  {q:'The very first human ancestors lived in…', c:['East Africa','South America','Europe','Antarctica'], ex:'Some of the oldest and most famous fossils, like Lucy, come from Ethiopia, Kenya and Tanzania.'},
+  {q:'Which hominid’s name means “handy man”?', c:['Homo habilis','Homo erectus','Homo sapiens','Australopithecus'], ex:'For its stone tools.'},
+  {q:'Hunter-gatherers who moved from place to place following food are called…', c:['Nomads','Farmers','Merchants','Rulers'], ex:'They didn’t stay in one place.'},
+  {q:'Which happened in the Neolithic Age but NOT in the Paleolithic Age?', c:['Farming and permanent villages','Using fire','Making stone tools','Hunting animals'], ex:'Fire, stone tools and hunting were already Paleolithic.'},
+  {q:'What was one big result of the Agricultural Revolution?', c:['Food surpluses, which let villages grow and people take specialized jobs','People became nomads again','Cave art stopped forever','Everyone became equal'], ex:'Surplus → bigger villages → specialized jobs → social classes.'},
+  {q:'In a social pyramid, the LARGEST group is usually…', c:['Farmers and workers at the bottom','Rulers at the top','Priests in the middle','Kings'], ex:'The wide base = the most people.'},
+  {q:'Which is a likely reason for cave art?', c:['To tell stories about hunts and share beliefs','To mark farm borders','To advertise products','To write laws'], ex:'Cave art came long before writing.'},
+  {type:'num', q:'How many years passed between 8000 BCE and 3000 BCE?', a:'5000', calc:'8000-3000', ex:'Both BCE → subtract: 8,000 − 3,000 = <b>5,000 years</b>.'},
+  {type:'num', q:'How many years passed between 300 BCE and 200 CE?', a:'500', calc:'300+200', ex:'BCE to CE → add: 300 + 200 = <b>500 years</b>.'},
+  {q:'Which technology helped early humans cook food and stay warm?', c:['Fire','The wheel','Writing','The plow'], ex:'Homo erectus is believed to be the first to use fire.'},
+  {q:'How did early humans most likely first reach North America?', c:['Across the Beringia land bridge from Asia during the Ice Age','By ship from Europe','From Australia by raft','They started there'], ex:'Lower sea levels uncovered land between Siberia and Alaska.'},
+]},
+];
+
+/*DATA-END*/
+
+// ---------- rendering ----------
+function esc(s){return String(s).replace(/&(?![a-z]+;|#\d+;)/g,'&amp;');}
+function fmt(s){
+  s=esc(s);
+  s=s.replace(/\{\{(.+?)\|\|(.+?)\}\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  s=s.replace(/\{(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\}/g,'<span class="fr"><span>$1</span><span>$2</span></span>');
+  return s;
+}
+function nice(v){ const r=Math.round(v*1000)/1000; return r<0?'−'+Math.abs(r):String(r); }
+function graphSVG(g){
+  const x0=g.x?g.x[0]:-6, x1=g.x?g.x[1]:6, y0=g.y?g.y[0]:-6, y1=g.y?g.y[1]:6;
+  const xs=g.xs||1, ys=g.ys||1, quad1=(x0===0&&y0===0);
+  const xl=g.xl||(quad1?xs:2), yl=g.yl||(quad1?ys:2);
+  const W=320,H=320, pl=quad1?(g.yt?52:36):10, pb=quad1?(g.xt?42:26):10, pr=12, pt=12;
+  const w=W-pl-pr, h=H-pt-pb;
+  const X=x=>pl+(x-x0)/(x1-x0)*w, Y=y=>pt+(y1-y)/(y1-y0)*h;
+  let s=`<svg class="graph" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system,Helvetica,Arial" font-size="11">`;
+  s+=`<defs><clipPath id="clp"><rect x="${pl}" y="${pt}" width="${w}" height="${h}"/></clipPath>
+      <marker id="arw" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/></marker></defs>`;
+  const eps=1e-9;
+  for(let v=Math.ceil(x0/xs)*xs; v<=x1+eps; v+=xs) s+=`<line x1="${X(v)}" y1="${pt}" x2="${X(v)}" y2="${pt+h}" stroke="#e5e7eb"/>`;
+  for(let v=Math.ceil(y0/ys)*ys; v<=y1+eps; v+=ys) s+=`<line x1="${pl}" y1="${Y(v)}" x2="${pl+w}" y2="${Y(v)}" stroke="#e5e7eb"/>`;
+  // axes
+  s+=`<line x1="${pl}" y1="${Y(Math.max(y0,Math.min(0,y1)))}" x2="${pl+w}" y2="${Y(Math.max(y0,Math.min(0,y1)))}" stroke="#374151" stroke-width="1.5"/>`;
+  s+=`<line x1="${X(Math.max(x0,Math.min(0,x1)))}" y1="${pt}" x2="${X(Math.max(x0,Math.min(0,x1)))}" y2="${pt+h}" stroke="#374151" stroke-width="1.5"/>`;
+  const ax=Y(Math.max(y0,Math.min(0,y1))), ay=X(Math.max(x0,Math.min(0,x1)));
+  for(let v=Math.ceil(x0/xl)*xl; v<=x1+eps; v+=xl){ if(Math.abs(v)<eps && !quad1) continue;
+    s+=`<text x="${X(v)}" y="${ax+14}" text-anchor="middle" fill="#4b5563">${nice(v)}</text>`; }
+  for(let v=Math.ceil(y0/yl)*yl; v<=y1+eps; v+=yl){ if(Math.abs(v)<eps) continue;
+    s+=`<text x="${ay-5}" y="${Y(v)+4}" text-anchor="end" fill="#4b5563">${nice(v)}</text>`; }
+  if(!quad1){ s+=`<text x="${pl+w-4}" y="${ax-6}" text-anchor="end" font-style="italic" font-size="13">x</text>`;
+              s+=`<text x="${ay+6}" y="${pt+12}" font-style="italic" font-size="13">y</text>`; }
+  if(g.xt) s+=`<text x="${pl+w/2}" y="${H-6}" text-anchor="middle" font-size="12" font-weight="600">${g.xt}</text>`;
+  if(g.yt) s+=`<text x="14" y="${pt+h/2}" text-anchor="middle" font-size="12" font-weight="600" transform="rotate(-90 14 ${pt+h/2})">${g.yt}</text>`;
+  // lines
+  s+=`<g clip-path="url(#clp)">`;
+  (g.lines||[]).forEach(L=>{
+    let [[a,b],[c,d]]=L, p,q;
+    if(a===c){ p=[a,y0]; q=[a,y1]; }
+    else { const m=(d-b)/(c-a), f=x=>b+m*(x-a);
+      p = g.ray? [a,b] : [x0,f(x0)]; q=[x1,f(x1)];
+      // pull endpoints inside the box so the arrowheads are visible
+      const clip=(P,Q)=>{ let [px,py]=P; if(py>y1){px=a+(y1-b)/m;py=y1;} if(py<y0){px=a+(y0-b)/m;py=y0;} return [px,py]; };
+      p = g.ray? p : clip(p,q); q=clip(q,p); }
+    const shrink=0.985, mx=(X(p[0])+X(q[0]))/2, my=(Y(p[1])+Y(q[1]))/2;
+    const sx=v=>mx+(v-mx)*shrink, sy=v=>my+(v-my)*shrink;
+    s+=`<line x1="${sx(X(p[0]))}" y1="${sy(Y(p[1]))}" x2="${sx(X(q[0]))}" y2="${sy(Y(q[1]))}" stroke="#2563eb" stroke-width="2.5"
+        marker-end="url(#arw)" ${g.ray?'':'marker-start="url(#arw)"'}/>`;
+  });
+  s+=`</g>`;
+  (g.pts||[]).forEach(([x,y,lab])=>{
+    s+=`<circle cx="${X(x)}" cy="${Y(y)}" r="4" fill="#111827"/>`;
+    if(lab){ const right = X(x) < pl+w*0.7; s+=`<text x="${X(x)+(right?7:-7)}" y="${Y(y)-7}" text-anchor="${right?'start':'end'}" font-size="12" font-weight="600" fill="#111827" stroke="#fff" stroke-width="3" paint-order="stroke">${lab}</text>`; }
+  });
+  return s+'</svg>';
+}
+function tablesHTML(ts){
+  return '<div class="tables">'+ts.map(t=>'<table class="t">'+(t.cap?`<caption>${t.cap}</caption>`:'')+
+    t.rows.map(r=>'<tr>'+r.map((v,i)=>i===0?`<th>${v}</th>`:`<td>${typeof v==='number'?nice(v):v}</td>`).join('')+'</tr>').join('')+'</table>').join('')+'</div>';
+}
+
+// ---------- answer checking for typed answers ----------
+function parseNum(str){
+  let s=String(str).trim().toLowerCase().replace(/[−–—]/g,'-').replace(/[\s$,]/g,'');
+  if(/^(undefined|undef|und|noslope|none)$/.test(s)) return {u:true};
+  let m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
+  if(m){ const d=parseFloat(m[2]); if(d===0) return {u:true}; return {v:parseFloat(m[1])/d, dec:false}; }
+  if(/^-?\d*\.?\d+$/.test(s)) return {v:parseFloat(s), dec:/\./.test(s)};
+  return null;
+}
+function numCorrect(input, ans){
+  const u=parseNum(input); if(!u) return null;
+  const a=parseNum(ans);
+  if(a.u) return !!u.u;
+  if(u.u) return false;
+  return Math.abs(u.v-a.v) < (u.dec ? 0.006 : 1e-9);
+}
+
+// ---------- app ----------
+const app=document.getElementById('app');
+const best=id=>{ try{return JSON.parse(localStorage.getItem('pt-best-'+id));}catch(e){return null;} };
+const saveBest=(id,sc,tot)=>{ const b=best(id); if(!b || sc/tot > b.s/b.t) localStorage.setItem('pt-best-'+id, JSON.stringify({s:sc,t:tot})); };
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+let S=null; // current run state
+
+function home(){
+  S=null; window.scrollTo(0,0);
+  let h=`<header class="top"><h1>🏺 Social Studies CA#1</h1><p>Geography · Early Humans · Timelines, charts &amp; maps</p></header><div class="wrap"><a class="card test" href="../" style="text-decoration:none"><span class="num">📐</span><span class="meta"><div class="title">Math Chapter 4 practice tests</div><div class="sub">Switch to math</div></span><span class="badge">→</span></a><a class="card test" href="../science/" style="text-decoration:none"><span class="num">🔭</span><span class="meta"><div class="title">Science CA#1 practice tests</div><div class="sub">Switch to science</div></span><span class="badge">→</span></a>`;
+  TESTS.forEach((t,i)=>{
+    const b=best(t.id); let badge='<span class="badge">New</span>';
+    if(b){ const p=Math.round(100*b.s/b.t); badge=`<span class="badge ${p>=90?'good':p>=70?'mid':''}">Best ${p}%</span>`; }
+    h+=`<button class="card test ${t.star?'star':''}" onclick="start(${i})"><span class="num">${t.star?'⭐':i+1}</span>
+        <span class="meta"><div class="title">${fmt(t.title)}</div><div class="sub">${t.date} · ${t.qs.length} questions</div></span>${badge}</button>`;
+  });
+  h+=`<p class="center muted" style="font-size:14px">Tap an answer to check it right away. Open-ended questions: write your answer, then compare it with the sample answer.</p></div>`;
+  app.innerHTML=h;
+}
+function start(ti, only){
+  const t=TESTS[ti];
+  const idx = only || t.qs.map((_,i)=>i);
+  S={ti, idx, pos:0, results:[], order: idx.map(i=>t.qs[i].c? shuffle(t.qs[i].c.map((_,k)=>k)) : null)};
+  render();
+}
+function render(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], qi=S.idx[S.pos], Q=t.qs[qi], n=S.idx.length;
+  let h=`<div class="wrap"><div class="qhead"><button class="back" onclick="if(confirm('Leave this test? Your progress will be lost.'))home()">← Tests</button>
+    <span>${S.pos+1} / ${n}</span></div><div class="bar"><i style="width:${100*S.pos/n}%"></i></div>
+    <div class="card"><div class="muted" style="font-size:13px">${fmt(t.title)}</div><div class="q">${fmt(Q.q)}</div>`;
+  if(Q.p) h+=`<div class="passage">${fmt(Q.p)}</div>`;
+  if(Q.svg) h+=Q.svg;
+  if(Q.g) h+=graphSVG(Q.g);
+  if(Q.t) h+=tablesHTML(Q.t);
+  if(Q.type==='open'){
+    h+=`<textarea class="open" id="oa" placeholder="Write your answer here…"></textarea><button class="btn" id="show" onclick="showModel()">Show sample answer</button><div id="md"></div>`;
+  } else if(Q.c){
+    S.order[S.pos].forEach(k=>{ h+=`<button class="choice" data-k="${k}" onclick="pick(${k})">${fmt(Q.c[k])}</button>`; });
+  } else {
+    h+=`<div class="numrow"><input id="ans" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Your answer"
+         onkeydown="if(event.key==='Enter')checkNum()"><button class="btn" style="width:auto;margin:0;padding:0 18px" id="chk" onclick="checkNum()">Check</button></div>
+        <div class="keys"><button class="key" onclick="ins('-')">−</button><button class="key" onclick="ins('/')">/</button><button class="key" onclick="ins('.')">.</button>
+        <button class="key" onclick="setAns('undefined')">undefined</button><button class="key" onclick="setAns('')">clear</button></div>
+        <div class="hint">Fractions like −3/2 or decimals like −1.5 both work.</div>`;
+  }
+  h+=`<div id="fb"></div></div></div>`;
+  app.innerHTML=h;
+}
+function ins(ch){ const el=document.getElementById('ans'); el.value+=ch; el.focus(); }
+function setAns(v){ const el=document.getElementById('ans'); el.value=v; el.focus(); }
+function feedback(ok, correctText, ex){
+  const last = S.pos===S.idx.length-1;
+  document.getElementById('fb').innerHTML = `<div class="fb ${ok?'ok':'bad'}"><span class="fbh">${ok?'✅ Correct!':'❌ Not quite. Answer: '+correctText}</span>${fmt(ex||'')}</div>
+    <button class="btn" id="next" onclick="next()">${last?'See my score':'Next →'}</button>`;
+  document.getElementById('next').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function pick(k){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], ok = k===0;
+  document.querySelectorAll('.choice').forEach(b=>{ b.disabled=true; const bk=+b.dataset.k;
+    if(bk===0) b.classList.add('correct'); else if(bk===k) b.classList.add('wrong'); });
+  S.results.push({qi:S.idx[S.pos], ok, given:Q.c[k]});
+  feedback(ok, fmt(Q.c[0]), Q.ex);
+}
+function checkNum(){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
+  const r=numCorrect(el.value, Q.a);
+  if(r===null){ el.style.borderColor='#f59e0b'; el.placeholder='Type a number, like 3/4 or −2'; el.value=''; return; }
+  el.disabled=true; document.getElementById('chk').disabled=true;
+  document.querySelectorAll('.key').forEach(b=>b.disabled=true);
+  S.results.push({qi:S.idx[S.pos], ok:r, given:el.value});
+  feedback(r, fmt(fracShow(Q.a)), Q.ex);
+}
+function showModel(){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]];
+  document.getElementById('show').remove(); document.getElementById('oa').readOnly=true;
+  document.getElementById('md').innerHTML=`<div class="model"><b>Sample answer:</b><br>${fmt(Q.model)}</div><div class="hint">${fmt(Q.ex)}</div>
+    <p style="margin:12px 0 0;font-weight:600">Did your answer include the same main points?</p>
+    <button class="btn" onclick="selfGrade(true)">✅ Yes, I got the main points</button><button class="btn ghost" onclick="selfGrade(false)">Not yet: I'll practice this one again</button>`;
+}
+function selfGrade(ok){
+  const Q=TESTS[S.ti].qs[S.idx[S.pos]];
+  S.results.push({qi:S.idx[S.pos], ok, given:document.getElementById('oa').value});
+  const last=S.pos===S.idx.length-1;
+  document.getElementById('md').innerHTML=`<div class="model"><b>Sample answer:</b><br>${fmt(Q.model)}</div><button class="btn" id="next" onclick="next()">${last?'See my score':'Next →'}</button>`;
+}
+function next(){ if(S.pos < S.idx.length-1){ S.pos++; render(); } else results(); }
+function results(){
+  window.scrollTo(0,0);
+  const t=TESTS[S.ti], n=S.results.length, sc=S.results.filter(r=>r.ok).length, p=Math.round(100*sc/n);
+  if(S.idx.length===t.qs.length) saveBest(t.id, sc, n);
+  const msg = p===100?'🏆 Perfect!': p>=90?'🌟 Excellent!': p>=75?'👍 Nice work, review the misses below.': p>=50?'💪 Getting there. Retry the ones you missed.':'📚 Review the lesson, then try again.';
+  const missed=S.results.filter(r=>!r.ok).map(r=>r.qi);
+  let h=`<div class="wrap"><div class="card center"><div class="muted">${fmt(t.title)}</div><div class="score">${sc} / ${n}</div>
+    <div style="font-size:20px;font-weight:650">${p}%</div><p>${msg}</p>
+    ${missed.length?`<button class="btn" onclick="start(${S.ti},[${missed}])">Retry the ${missed.length} I missed</button>`:''}
+    <button class="btn ghost" onclick="start(${S.ti})">Retake the whole test</button>
+    <button class="btn ghost" onclick="home()">All tests</button></div>`;
+  if(missed.length){
+    h+=`<div class="card"><b>Review what you missed</b>`;
+    S.results.filter(r=>!r.ok).forEach(r=>{ const Q=t.qs[r.qi];
+      h+=`<div class="rev"><div>${fmt(Q.q)}</div><div class="muted">You said: ${fmt(String(r.given||'(blank)'))}</div>
+          <div><b>Answer:</b> ${Q.c?fmt(Q.c[0]):Q.model?fmt(Q.model):fmt(fracShow(Q.a))}</div><div class="muted">${fmt(Q.ex||'')}</div></div>`; });
+    h+=`</div>`;
+  }
+  app.innerHTML=h+'</div>';
+}
+home();
+</script>
+</body>
+</html>

@@ -418,7 +418,7 @@ let S=null; // current run state
 
 function home(){
   S=null; window.scrollTo(0,0);
-  let h=`<header class="top"><h1>🔭 Science CA#1 Practice</h1><p>Earth-Moon-Sun · Solar System · Vocabulary · Test Fri 11/13</p></header><div class="wrap"><a class="card test" href="../" style="text-decoration:none"><span class="num">📐</span><span class="meta"><div class="title">Math Chapter 4 practice tests</div><div class="sub">Switch to math</div></span><span class="badge">→</span></a>`;
+  let h=`<header class="top"><h1>🔭 Science CA#1 Practice</h1><p>Earth-Moon-Sun · Solar System · Vocabulary · Test Fri 11/13</p></header><div class="wrap"><a class="card test" href="../" style="text-decoration:none"><span class="num">📐</span><span class="meta"><div class="title">Math Chapter 4 practice tests</div><div class="sub">Switch to math</div></span><span class="badge">→</span></a><a class="card test" href="../social-studies/" style="text-decoration:none"><span class="num">🏺</span><span class="meta"><div class="title">Social Studies CA#1 practice tests</div><div class="sub">Geography &amp; Early Humans</div></span><span class="badge">→</span></a>`;
   TESTS.forEach((t,i)=>{
     const b=best(t.id); let badge='<span class="badge">New</span>';
     if(b){ const p=Math.round(100*b.s/b.t); badge=`<span class="badge ${p>=90?'good':p>=70?'mid':''}">Best ${p}%</span>`; }
