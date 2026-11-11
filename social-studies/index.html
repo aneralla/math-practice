@@ -300,6 +300,9 @@ const TESTS = [
 ];
 
 /*DATA-END*/
+function N(v){return v<0?'−'+Math.abs(v):String(v);}
+function fracShow(s){ if(s==='undefined') return 'undefined'; if(!s.includes('/')) return N(+s);
+  const [n,d]=s.split('/').map(Number); return (n<0?'−':'')+'{'+Math.abs(n)+'/'+d+'}'; }
 
 // ---------- rendering ----------
 function esc(s){return String(s).replace(/&(?![a-z]+;|#\d+;)/g,'&amp;');}
@@ -366,6 +369,7 @@ function tablesHTML(ts){
 function parseNum(str){
   let s=String(str).trim().toLowerCase().replace(/[−–—]/g,'-').replace(/[\s$,]/g,'');
   if(/^(undefined|undef|und|noslope|none)$/.test(s)) return {u:true};
+  const unit=s.match(/^(-?[\d.\/]+)[a-z]+\.?$/); if(unit) s=unit[1];   // "5000years", "11feet", "20mi"
   let m=s.match(/^(-?\d*\.?\d+)\/(-?\d*\.?\d+)$/);
   if(m){ const d=parseFloat(m[2]); if(d===0) return {u:true}; return {v:parseFloat(m[1])/d, dec:false}; }
   if(/^-?\d*\.?\d+$/.test(s)) return {v:parseFloat(s), dec:/\./.test(s)};
@@ -447,7 +451,7 @@ function pick(k){
 function checkNum(){
   const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
   const r=numCorrect(el.value, Q.a);
-  if(r===null){ el.style.borderColor='#f59e0b'; el.placeholder='Type a number, like 3/4 or −2'; el.value=''; return; }
+  if(r===null){ el.style.borderColor='#f59e0b'; document.getElementById('fb').innerHTML='<div class="hint" style="color:#b45309">Type just a number, like 5000, 3/4 or −2.</div>'; el.focus(); return; }
   el.disabled=true; document.getElementById('chk').disabled=true;
   document.querySelectorAll('.key').forEach(b=>b.disabled=true);
   S.results.push({qi:S.idx[S.pos], ok:r, given:el.value});
