@@ -151,7 +151,9 @@ function pyramid(){
   return s+`</svg><div class="cap">An example social pyramid of an early civilization</div>`;
 }
 const NEO_TL = timeline([['10,000 BCE','Farming|begins'],['8000 BCE','Jericho|stone tower'],['7000 BCE','Pottery|made'],['3500 BCE','Wheel|invented'],['3000 BCE','Stonehenge|begun']], 'Farming to Stonehenge (BCE)');
-const CATAL = 'Çatalhöyük was one of the world’s first large farming towns. It was built in what is now Turkey about 9,000 years ago, and thousands of people lived there. Its mud-brick houses were packed so tightly together that there were no streets. Instead, people walked across the rooftops and climbed down ladders through holes in the roofs to get inside. They grew wheat and barley and raised sheep and goats. They painted the walls of their homes and buried their dead under the floors.';
+const CATAL = 'Çatalhöyük was one of the world’s first large farming towns. It was built in what is now Turkey about 9,400 years ago, and thousands of people lived there. Its mud-brick houses were packed so tightly together that there were no streets. Instead, people walked across the rooftops and climbed down ladders through holes in the roofs to get inside. They grew wheat and barley and raised sheep and goats. They painted the walls of their homes and buried their dead under the floors.';
+
+const GOBEKLI = 'Göbekli Tepe is an ancient site in what is now southern Turkey. It was built about 11,600 years ago, making it one of the oldest known monuments in the world. Its builders set up giant T-shaped stone pillars in circles. Some pillars are as tall as 18 feet and weigh many tons. Carvings of foxes, boars, snakes and vultures cover many of them. When archaeologists studied the site, they were amazed: they found no signs that its builders farmed. They hunted and gathered their food. Scientists had believed that people needed farming and villages before they could build something this big. Göbekli Tepe showed that hunter-gatherers could plan and work together on huge projects, too.';
 
 const TESTS = [
 { id:'ss-geo', title:'Geography: Maps & Natural Resources', date:'Geography', qs:[
@@ -357,6 +359,66 @@ const TESTS = [
   {type:'open', q:'Use the pyramid. Describe a social pyramid: who is at the top and the bottom, and why is it shaped like a pyramid?', svg:pyramid(),
    model:'A social pyramid shows the social classes in a society. A small number of rulers, like kings, are at the top and have the most power. Farmers and laborers are at the bottom, and they are the largest group. It is shaped like a pyramid because there are few people at the top and many people at the bottom.',
    ex:'Checklist: ✔ name the top and bottom groups ✔ explain the shape (few vs. many). In some civilizations the top is a pharaoh and the bottom is enslaved people. That counts too.'},
+]},
+{ id:'ss-quiz-c', title:'🔥 Social Studies Challenge Quiz C (harder)', date:'Think it through', star:true, qs:[
+  {q:'Which question could a PHYSICAL map answer that a POLITICAL map could not?', c:['Why did people settle along the Nile instead of in the Sahara Desert?','What is the capital of Egypt?','Which countries share a border with Egypt?','Which city in Egypt has the most people?'],
+   ex:'Only a physical map shows the river valley and the desert, which explains where people could live and farm.'},
+  {q:'A map shows country borders and capital cities, and it also uses colors to show mountains and lowlands. What is the best way to describe it?', c:['It shows both political and physical features','It is only a political map','It is only a physical map','It is a timeline'],
+   ex:'Borders and capitals are political features; mountains and lowlands are physical. Many real maps show both.'},
+  {q:'A Neolithic village has rich soil and a river, but no good stone nearby. What would the villagers most likely need to trade for?', c:['Stone, like flint or obsidian, to make tools','Water','Soil','Sunlight'],
+   ex:'They already have water and soil. Stone tools were essential, so they would trade their surplus for it.'},
+  {q:'An archaeologist finds a burned animal bone with cut marks, lying next to a stone blade in an old fire pit. What is the most reasonable conclusion?', c:['People cut and cooked meat at this spot','The animal died in a forest fire','The bone is an artifact that people carved into a tool','The people living here were farmers'],
+   ex:'Cut marks + a stone blade + a fire pit together point to butchering and cooking. Nothing here shows farming.'},
+  {q:'Which source gives the most direct, first-hand evidence about how Paleolithic people hunted?', c:['Spear points and butchered animal bones found at an ancient hunting site','A historian’s book explaining Paleolithic hunting','A movie about cave people made in 2019','A website article summarizing what scientists think'],
+   ex:'The objects come from the hunters themselves (primary evidence). The others are secondary: made much later by people who weren’t there.'},
+  {q:'Is a 17,000-year-old cave painting an artifact, a primary source, or both?', c:['Both: people made it, and they made it at the time','Only an artifact','Only a primary source','Neither: it is a fossil'], ex:'Many artifacts are also primary sources, because they were made by people of that time.'},
+  {q:'Use the chart. Hint: Neanderthals died out about 40,000 years ago, and the older hominids had died out long before Homo sapiens appeared. Which two hominids lived on Earth at the same time?', t:HOMINID_CHART, c:['Neanderthals and Homo sapiens','Australopithecus and Homo sapiens','Homo habilis and Neanderthals','Australopithecus and Neanderthals'],
+   ex:'Homo sapiens appeared about 300,000 years ago, and Neanderthals survived until about 40,000 years ago, so for more than 200,000 years both were alive. Australopithecus and Homo habilis were gone long before Neanderthals or Homo sapiens appeared.'},
+  {q:'Which list shows causes and effects in the correct order?', c:['Farming → food surplus → specialized jobs → social classes','Social classes → farming → food surplus → specialized jobs','Specialized jobs → farming → social classes → food surplus','Food surplus → social classes → farming → specialized jobs'],
+   ex:'Each step makes the next one possible.'},
+  {q:'Which of these was an EFFECT of the Agricultural Revolution (not a cause of it)?', c:['Populations grew larger','The climate warmed at the end of the Ice Age','People noticed that seeds could sprout into new plants','Wild grains grew in the Fertile Crescent'],
+   ex:'The other three happened first and helped farming begin. More food then led to more people.'},
+  {q:'How might the end of the last Ice Age have helped farming begin?', c:['A warmer climate let wild grains grow in more places','It made all the animals disappear','It froze the rivers, so people stayed home','It ended the need for food'],
+   ex:'As the ice melted (about 12,000 years ago), warmer, wetter weather helped plants like wheat and barley spread.'},
+  {q:'A Paleolithic hunter time-travels to a Neolithic village. What would surprise them MOST?', c:['People living in permanent houses next to planted fields','People using fire','People using stone tools','People eating meat'], ex:'Fire, stone tools and meat were all part of Paleolithic life. Permanent homes and farms were new.'},
+  {q:'Which job depends MOST on a food surplus?', c:['A full-time potter who does not grow food','A hunter','A gatherer of wild plants','A nomad who follows herds'],
+   ex:'Someone who doesn’t produce food can only exist if others grow extra food to share or trade.'},
+  {q:'In many early civilizations, scribes, who could read and write, ranked above farmers. What does this suggest?', c:['Special skills, like writing, could give people a higher social class','Farmers were not important','Scribes did all of the farming','Social classes were chosen at random'],
+   ex:'Rare skills were valuable, so the people who had them gained status.'},
+  {q:'Modern humans reached Australia at least 50,000 years ago, but Australia was never connected to Asia by land. What does this suggest?', c:['Early humans must have used boats or rafts to cross the sea','They walked across a land bridge','Humans first evolved in Australia','Australia was once attached to Europe'],
+   ex:'With no land bridge, the only way across was over water. That shows early humans were skilled planners and builders.'},
+  {q:'Many cave paintings are found deep inside dark caves, far from where people lived. What is the BEST inference?', c:['The paintings may have had a special or spiritual purpose, not just decoration','People lived deep inside dark caves','The artists were hiding from the Sun','The paintings were maps to food'],
+   ex:'If they were only decoration, you would expect them where people spent their time. Their hidden locations suggest ceremony or belief.'},
+  {q:'Which pair shows a correct cause → effect?', c:['Controlling fire → early humans could live in colder places','Living in cold places → humans learned to farm','Cave art → the end of the Ice Age','Farming → people became nomads'],
+   ex:'Fire gave warmth, which let people survive in colder regions like Ice Age Europe.'},
+  {q:'The Lascaux cave paintings were made about 17,000 years ago. About what year is that?', c:['About 15,000 BCE','About 17,000 BCE','About 19,000 BCE','About 15,000 CE'],
+   ex:'About 2,000 of those 17,000 years are in the CE era, so 17,000 − 2,000 ≈ 15,000 BCE.'},
+  {type:'num', q:'Farming began about 10,000 BCE. About how many years ago was that, counting to 2026 CE? (Type digits.)', a:'12026', alt:['12025','12000'], calc:'10000+2026',
+   ex:'BCE to CE → add: 10,000 + 2,026 = <b>12,026 years</b>. (12,025 and 12,000 are also accepted.)'},
+  {type:'num', q:'Ötzi the Iceman lived about 3300 BCE, and the Great Pyramid was built about 2560 BCE. How many years apart are those two dates?', a:'740', calc:'3300-2560',
+   ex:'Both BCE → subtract: 3,300 − 2,560 = <b>740 years</b>.'},
+  {type:'num', q:'Çatalhöyük was founded about 7400 BCE, and the city of Rome was founded in 753 BCE. How many years apart is that?', a:'6647', calc:'7400-753',
+   ex:'Both BCE → subtract: 7,400 − 753 = <b>6,647 years</b>.'},
+  {type:'num', q:'A clay pot is dated to 1200 BCE and a coin to 300 CE. How many years apart were they made?', a:'1500', alt:['1499'], calc:'1200+300',
+   ex:'BCE to CE → add: 1,200 + 300 = <b>1,500 years</b>. (1,499 is also accepted: there was no year 0.)'},
+  {q:'Which list is in order from EARLIEST to LATEST?', c:['Lucy lives → Homo erectus leaves Africa → Lascaux art painted → farming begins → Great Pyramid built','Homo erectus leaves Africa → Lucy lives → farming begins → Lascaux art painted → Great Pyramid built','Lucy lives → Lascaux art painted → Homo erectus leaves Africa → Great Pyramid built → farming begins','Farming begins → Lucy lives → Lascaux art painted → Homo erectus leaves Africa → Great Pyramid built'],
+   ex:'3.2 million years ago → about 1.8 million years ago → 17,000 years ago → about 12,000 years ago → about 4,500 years ago.'},
+  {q:'Read the passage. Why did Göbekli Tepe surprise scientists?', p:GOBEKLI, c:['It was built by hunter-gatherers, before farming began','It was built by the ancient Egyptians','It was made of metal','It was found in North America'],
+   ex:'Scientists had thought people needed farming and villages before they could build big monuments.'},
+  {q:'Which conclusion does the passage BEST support?', p:GOBEKLI, c:['Hunter-gatherers could organize large groups to work together on big projects','Hunter-gatherers lived in big cities','Göbekli Tepe was a farm','The carvings were made by Neanderthals'],
+   ex:'Moving and carving pillars weighing many tons took a lot of people working together.'},
+  {q:'Which detail from the passage BEST supports the idea that Göbekli Tepe was built before farming?', p:GOBEKLI, c:['Scientists found no signs that its builders farmed; they hunted and gathered','The pillars are as tall as 18 feet','Animals like foxes and snakes are carved on them','It is in modern-day Turkey'],
+   ex:'Only that detail is about how the builders got their food.'},
+  {q:'Which statement is an OPINION, not a fact?', c:['Cave paintings are the most beautiful art ever made','The Lascaux paintings are about 17,000 years old','Early artists used charcoal and colored minerals','Many cave paintings show horses and bison'],
+   ex:'“Most beautiful” is a judgment that people can disagree about. The others can be checked with evidence.'},
+  {q:'Which is the BEST evidence that Neanderthals may have had beliefs or cared about their dead?', c:['They buried their dead','They had large brains','They lived in Europe and Asia','They used stone tools'],
+   ex:'Burying the dead suggests they had ideas about death or respect for others, not just survival.'},
+  {type:'open', q:'Was the Agricultural Revolution good or bad for people? Choose a side and give TWO reasons with evidence.',
+   model:'I think the Agricultural Revolution was mostly good for people. First, farming created a food surplus, so more people could survive and villages could grow. Second, because not everyone had to farm, people could take specialized jobs like potter or weaver, which led to new inventions and trade. (Someone could also argue it was bad: farming was hard work, a bad harvest could cause famine, and social classes made some people much less equal.)',
+   ex:'Checklist: ✔ a clear side ✔ two reasons ✔ evidence or examples ✔ bonus: mention the other side.'},
+  {type:'open', q:'Compare Homo erectus and Homo sapiens. Give ONE way they were alike and TWO ways they were different.',
+   model:'Homo erectus and Homo sapiens were alike because both walked upright and used tools and fire. They were different because Homo erectus appeared much earlier (about 1.9 million years ago) while Homo sapiens appeared about 300,000 years ago. Also, Homo sapiens developed complex language and cave art, and reached every continent except Antarctica, including Australia and the Americas, which Homo erectus never did.',
+   ex:'Checklist: ✔ one similarity ✔ two differences ✔ use words like “both,” “while,” and “but.”'},
 ]},
 ];
 
