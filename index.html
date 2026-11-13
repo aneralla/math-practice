@@ -652,7 +652,8 @@ function pick(k){
 }
 function checkNum(){
   const Q=TESTS[S.ti].qs[S.idx[S.pos]], el=document.getElementById('ans');
-  const r=numCorrect(el.value, Q.a);
+  let r=numCorrect(el.value, Q.a);
+  if(r===false && Q.alt) r=Q.alt.some(x=>numCorrect(el.value,x));
   if(r===null){ el.style.borderColor='#f59e0b'; document.getElementById('fb').innerHTML='<div class="hint" style="color:#b45309">Type just a number, like 5000, 3/4 or −2.</div>'; el.focus(); return; }
   el.disabled=true; document.getElementById('chk').disabled=true;
   document.querySelectorAll('.key').forEach(b=>b.disabled=true);
