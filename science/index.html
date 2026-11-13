@@ -57,6 +57,9 @@
   .fr > span:last-child { padding:0 2px; }
   svg.pic { display:block; width:100%; max-width:340px; height:auto; margin:4px auto 2px; }
   svg.pic[width="170"] { max-width:170px; }
+  table.t td, table.t th { font-size:12px; padding:4px 5px; }
+  .tables { max-width:100%; overflow-x:auto; }
+  table.t { width:100%; }
   .cap { text-align:center; font-size:12px; color:var(--muted); margin-bottom:10px; }
   svg.graph { display:block; width:100%; max-width:340px; margin:4px auto 10px; background:#fff; }
   table.t { border-collapse:collapse; margin:6px auto 12px; font-size:16px; }
@@ -113,6 +116,25 @@ function tilt(toward){
   s+=`<text x="${cx-dx}" y="${cy+dy+16}" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">S</text>`;
   return s+`</svg><div class="cap">Earth (white line = axis, dashed = equator). Not to scale.</div>`;
 }
+
+const DAYLIGHT = [{cap:'Hours of daylight', rows:[
+  ['City','June 21','December 21'],
+  ['City A','15 hours','9 hours'],
+  ['City B','12 hours','12 hours'],
+  ['City C','19 hours','5½ hours'],
+  ['City D','9½ hours','14½ hours'],
+]}];
+const PLANETS = [{cap:'The planets (Earth = 1 for size)', rows:[
+  ['Planet','Distance from Sun (AU)','Diameter (Earths)','Length of year','Type'],
+  ['Mercury','0.4','0.4','88 days','rocky'],
+  ['Venus','0.7','0.95','225 days','rocky'],
+  ['Earth','1','1','365 days','rocky'],
+  ['Mars','1.5','0.5','687 days','rocky'],
+  ['Jupiter','5.2','11.2','12 years','gas giant'],
+  ['Saturn','9.5','9.4','29 years','gas giant'],
+  ['Uranus','19.2','4.0','84 years','ice giant'],
+  ['Neptune','30.1','3.9','165 years','ice giant'],
+]}];
 
 const TESTS = [
 { id:'sci-earth', title:'Earth’s Movements: Day, Night & Year', date:'Earth-Moon-Sun', qs:[
@@ -325,6 +347,61 @@ const TESTS = [
   {q:'Why does Venus shine in our night sky?', c:['It reflects sunlight','It makes its own light like a star','It is on fire','It reflects moonlight'], ex:'Planets don’t make light; they reflect the Sun’s.'},
   {q:'What does the Moon do over about 27 days?', c:['It rotates once AND revolves around Earth once','It only rotates','It only revolves','It revolves around the Sun once'], ex:'That’s why the same side always faces Earth.'},
   {q:'What was our solar system made from?', c:['A nebula: a spinning cloud of gas and dust pulled together by gravity','A broken-up star','Pieces of Earth','Comets'], ex:'Gravity pulled the nebula together into the Sun and planets.'},
+]},
+{ id:'sci-challenge', title:'🔥 Science Challenge Quiz (harder)', date:'Think it through', star:true, qs:[
+  {q:'Tonight the Moon looks like this. About what phase will it be in one week?', svg:moon(0.25), c:['Full moon','New moon','Third quarter','Waxing crescent'],
+   ex:'This is first quarter. Each main phase is about a week apart (29.5 ÷ 4 ≈ 7 days): first quarter → full moon.'},
+  {q:'Tonight the Moon looks like this. About how many days until the new moon?', svg:moon(0.875), c:['About 3 or 4 days','About 11 days','About 15 days','About 22 days'],
+   ex:'This waning crescent is the last phase before new moon. It is about ⅛ of the cycle away: 29.5 ÷ 8 ≈ 3.7 days.'},
+  {q:'A thin crescent Moon, lit on its RIGHT side, is seen low in the west just after sunset. Which phase is it?', c:['Waxing crescent','Waning crescent','Waning gibbous','Third quarter'],
+   ex:'From the Northern Hemisphere, lit on the right = waxing. A waxing crescent is only a few days past new moon, so it sets soon after the Sun.'},
+  {q:'The Moon is about 60% lit and the lit part gets smaller each night. Which phase is it?', c:['Waning gibbous','Waxing gibbous','Waning crescent','First quarter'],
+   ex:'More than half lit = gibbous. Shrinking = waning.'},
+  {q:'Why can’t a solar eclipse happen during a full moon?', c:['At full moon the Moon is on the far side of Earth, so it can’t get between the Sun and Earth','The Moon is too bright','Earth’s tilt blocks it','The Sun is too far away at full moon'],
+   ex:'A solar eclipse needs Sun → Moon → Earth, which only happens at new moon.'},
+  {q:'You see a total lunar eclipse tonight. What phase was the Moon about two weeks ago?', c:['New moon','Full moon','First quarter','Waning gibbous'],
+   ex:'A lunar eclipse only happens at full moon. Half a cycle (about 15 days) earlier, it was new moon.'},
+  {q:'A solar eclipse happens today. When is the soonest a lunar eclipse could possibly happen?', c:['About two weeks from now, at the next full moon','Tomorrow night','In exactly one year','Never, because they can’t happen in the same year'],
+   ex:'Eclipses often come in pairs about two weeks apart, while the Sun, Earth and Moon are still nearly lined up.'},
+  {q:'If Earth’s axis were tilted MORE (35° instead of 23.5°), what would happen?', c:['Summers would be hotter and winters colder: the seasons would be more extreme','There would be no seasons','Every season would be the same','Days would always be 12 hours long'],
+   ex:'More tilt means a bigger difference between direct and indirect sunlight during the year.'},
+  {q:'On June 21, which of these cities has the LONGEST day?', c:['Anchorage, Alaska (61°N)','New York (41°N)','Miami (26°N)','Quito, Ecuador (0°, on the equator)'],
+   ex:'On the June solstice, the farther north you are, the longer the day. Anchorage gets about 19 hours of daylight.'},
+  {q:'On December 21, which of these cities has the LONGEST day?', c:['Quito, Ecuador (0°, on the equator)','Anchorage, Alaska (61°N)','New York (41°N)','Miami (26°N)'],
+   ex:'Tricky! In December the Northern Hemisphere is tilted away from the Sun, so the farther north, the SHORTER the day. The equator stays at about 12 hours.'},
+  {q:'Use the table. Which city is in the Southern Hemisphere?', t:DAYLIGHT, c:['City D','City A','City B','City C'],
+   ex:'City D has its long days in December and short days in June: the opposite of the north.'},
+  {q:'Use the table. Which city is closest to the equator?', t:DAYLIGHT, c:['City B','City A','City C','City D'], ex:'Near the equator, daylight stays about 12 hours all year.'},
+  {q:'Use the table. Which city is farthest from the equator?', t:DAYLIGHT, c:['City C','City A','City B','City D'], ex:'The biggest swing between June and December (19 hours vs 5½ hours) means the highest latitude.'},
+  {q:'Which evidence BEST shows that Earth’s distance from the Sun does NOT cause the seasons?', c:['The Northern and Southern Hemispheres have opposite seasons at the same time','Summer is warmer than winter','The Sun rises in the east','The Moon has phases'],
+   ex:'Both hemispheres are the same distance from the Sun at any moment, yet one has summer while the other has winter. Only tilt explains that.'},
+  {q:'If Earth rotated twice as fast as it does now, how long would one day (day + night) last?', c:['About 12 hours','About 48 hours','About 24 hours','About 6 months'], ex:'Twice as fast → half the time: 24 ÷ 2 = 12 hours.'},
+  {q:'Imagine Earth stopped rotating but kept revolving around the Sun. About how long would one day-and-night cycle last at your house?', c:['About one year','About 24 hours','About one month','It would always be daytime'],
+   ex:'Your side would slowly turn toward and away from the Sun only as Earth went around it: about 6 months of day and 6 months of night.'},
+  {q:'If the Moon did NOT rotate at all as it orbited Earth, what would we see?', c:['Different sides of the Moon would face Earth during the month','We would still see only one side','The Moon would have no phases','The Moon would look red'],
+   ex:'We see only one side because the Moon spins exactly once per orbit. Without that spin, different sides would turn toward us.'},
+  {q:'Use the chart. Which pattern does it show?', t:PLANETS, c:['The farther a planet is from the Sun, the longer its year','The bigger a planet is, the shorter its year','All planets have the same year','Rocky planets are farther from the Sun than gas giants'],
+   ex:'Read down the distance and year columns: both keep increasing.'},
+  {q:'Use the chart. About how many times farther from the Sun is Saturn than Earth?', t:PLANETS, c:['About 10 times','About 2 times','About 30 times','About 100 times'], ex:'Saturn is 9.5 AU and Earth is 1 AU, so about 10 times farther.'},
+  {q:'Use the chart. Which statement about size is true?', t:PLANETS, c:['Every outer planet is bigger than every inner planet','Mars is the biggest planet','Earth is bigger than Uranus','Venus is bigger than Jupiter'],
+   ex:'The smallest outer planet (Neptune, 3.9 Earths wide) is still bigger than the largest inner planet (Earth).'},
+  {type:'num', q:'Use the chart. How many Earth days longer is a year on Mars than a year on Earth?', t:PLANETS, a:'322', calc:'687-365', ex:'687 − 365 = <b>322 days</b> longer.'},
+  {type:'num', q:'Light from the Sun takes about 8 minutes to travel 1 AU. Jupiter is about 5 AU from the Sun. About how many minutes does sunlight take to reach Jupiter?', a:'40', alt:['41','41.6','42','43'], calc:'8*5',
+   ex:'5 AU × 8 minutes per AU = <b>about 40 minutes</b>.'},
+  {q:'Jupiter has about 318 times the mass of Earth, but its gravity at the cloud tops is only about 2.5 times Earth’s. Why not 318 times?', c:['Jupiter is so wide that you would be much farther from its center, and distance weakens gravity','Jupiter has no gravity','Jupiter’s rings cancel out its gravity','Gravity doesn’t depend on mass'],
+   ex:'Gravity depends on BOTH mass and distance. Jupiter is about 11 times wider than Earth, so its surface is far from its center.'},
+  {q:'Two asteroids have exactly the same mass. One is 1,000 km from a spacecraft and the other is 50,000 km away. Which pulls on the spacecraft more?', c:['The closer asteroid','The farther asteroid','They pull the same, because their masses are equal','Neither one has gravity'],
+   ex:'Same mass, so the deciding factor is distance: closer = stronger.'},
+  {type:'num', q:'An astronaut’s mass is 60 kg on Earth. What is the astronaut’s mass on the Moon, in kg?', a:'60', calc:'60',
+   ex:'Mass doesn’t change from place to place: still <b>60 kg</b>. Only WEIGHT changes.'},
+  {type:'num', q:'A student weighs 90 pounds on Earth. The Moon’s gravity is about ⅙ of Earth’s. About how much would the student weigh on the Moon, in pounds?', a:'15', calc:'90/6', ex:'90 ÷ 6 = <b>15 pounds</b>.'},
+  {q:'An astronaut in deep space is swinging a tool in a circle on a cord. The cord snaps. What happens to the tool?', c:['It moves off in a straight line in the direction it was going when the cord broke','It keeps moving in a circle','It stops right away','It flies back toward the astronaut'],
+   ex:'Without the pull of the cord, inertia keeps the tool moving straight. The Sun’s gravity plays the role of the cord for a planet.'},
+  {q:'Why don’t the planets fall into the Sun even though its gravity pulls on them?', c:['They are moving forward so fast that they keep curving around the Sun instead of falling into it','The Sun’s gravity doesn’t reach them','They are held up by the asteroid belt','They are pushed away by sunlight'],
+   ex:'Gravity pulls them inward while inertia carries them forward. The result is an orbit: always falling around the Sun, never into it.'},
+  {q:'Mercury travels much faster in its orbit than Neptune. What is the best explanation?', c:['Mercury is closer to the Sun, where the Sun’s gravity is stronger','Mercury is bigger than Neptune','Neptune has no gravity','Mercury has more moons'], ex:'Closer → stronger pull → faster orbit → shorter year (88 days).'},
+  {q:'When our solar system formed from a nebula, why did most of the material end up in the Sun?', c:['Gravity pulled most of the gas and dust into the center of the spinning cloud','The planets gave their material to the Sun','The material was blown in by wind','Light pushed it there'],
+   ex:'The center of the cloud had the most mass, so it pulled the hardest and kept collecting more. Today more than 99% of the solar system’s mass is in the Sun.'},
 ]},
 ];
 
